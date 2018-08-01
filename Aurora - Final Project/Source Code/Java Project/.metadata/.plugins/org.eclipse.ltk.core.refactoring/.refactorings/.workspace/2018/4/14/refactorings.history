@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;Text Retrieval - Prototype&apos; to &apos;Aurora&apos;" description="Rename resource &apos;Text Retrieval - Prototype&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/Text Retrieval - Prototype" name="Aurora" stamp="1523103486273" updateReferences="true"/>
-</session>

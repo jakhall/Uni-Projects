@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename compilation unit &apos;aurora.retrieval.DocumentRemove.java&apos; to &apos;DocumentRemover.java&apos;&#x0D;&#x0A;- Original project: &apos;Aurora&apos;&#x0D;&#x0A;- Original element: &apos;aurora.retrieval.DocumentRemove.java&apos;&#x0D;&#x0A;- Renamed element: &apos;aurora.retrieval.DocumentRemover.java&apos;" description="Rename compilation unit &apos;DocumentRemove.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;aurora.retrieval{DocumentRemove.java" name="DocumentRemover.java" references="false" stamp="1524500843926" version="1.0"/>
-</session>

@@ -1,9 +1,0 @@
-dup = 0xFD00
-
-start:	loco 1
-	push 
-	loco 2
-	dup
-	pop
-	pop
-	loco 3

@@ -1,7 +1,0 @@
-Please run "main.py" to launch shrines.
-
-Press "E" on the grid to generate an obstacle.
-
-Press "S" on the grid to generate a shrine.
-
-A must start with atleast one generated shrine. 

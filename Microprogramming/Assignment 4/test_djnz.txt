@@ -1,6 +1,0 @@
-djnz = 0xFF00
-
-start: loco 2
-
-loop1: djnz loop1 
-loop2: jump loop2

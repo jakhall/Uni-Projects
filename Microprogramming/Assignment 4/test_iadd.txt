@@ -1,9 +1,0 @@
-iadd = 0xF900
-
-start: loco 4
-       push
-       loco 5
-       push
-       iadd 
-       pop 
-       pop
