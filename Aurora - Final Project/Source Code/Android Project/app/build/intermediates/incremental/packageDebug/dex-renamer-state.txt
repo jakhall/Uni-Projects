@@ -1,0 +1,7 @@
+#Wed May 09 14:08:10 BST 2018
+base.0=C\:\\Users\\jakha\\Desktop\\AndroidClient\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_b91212e333ec55b7c8c028f712dc244131ecfcf6
+renamed.1=classes.dex
+renamed.0=classes2.dex
+file.1=C\:\\Users\\jakha\\Desktop\\AndroidClient\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_900398b0fdd10da3dd1fe18410e814929cbc69d1\\classes.dex
+base.1=C\:\\Users\\jakha\\Desktop\\AndroidClient\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_900398b0fdd10da3dd1fe18410e814929cbc69d1
+file.0=C\:\\Users\\jakha\\Desktop\\AndroidClient\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_b91212e333ec55b7c8c028f712dc244131ecfcf6\\classes.dex

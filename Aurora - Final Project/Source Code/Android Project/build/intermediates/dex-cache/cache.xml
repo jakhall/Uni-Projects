@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\25.2.0\support-annotations-25.2.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4a5a82a027706397fff621b22fd6fa796e91d7c5">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-25.2.0_fc7646fc9ab2edebb2709449593bcb2032e57208\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\transition\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e51c2f662bb72419632af5192553c37e33890a99">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-transition-25.2.0_7d031b150e5245a9bc9be81ad300dd655c4425f1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\support-media-compat\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-media-compat-25.2.0_6876a5bf7f7bb159d2f4ae1ffe680099d87db393\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\support-fragment\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8fe8a8f77d651982ce5e18f6187dc4daf914ac57">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-fragment-25.2.0_8e0593df11818beb4ac9c8935a2f1bf2eba88964\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="810f41e5b7fd99f196ebeabe865ba2c54e7e76dc">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-vector-drawable-25.2.0_f54ab40b6507e7539e582af1440dd818a09bdb7e\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="152de8da301561dcb0946471697a420d8f7a68c5">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-recyclerview-v7-25.2.0_1e68ea8573cb52ccc84614192eb803a5f06f3ac4\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\support-v4\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-v4-25.2.0_84447ed38d693bda1b75298e209a5d1649998d62\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\design\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ea6a989b83d19b1b461281e0475a6cd6514897f8">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-design-25.2.0_2e0539927d7e073f935a1d2aceba35bc64ec47aa\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="a4ecc617677e3b2418533c2cd57aba7f37685f54">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run_b91212e333ec55b7c8c028f712dc244131ecfcf6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\support-core-utils\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e820b7be8c035dd522da4bc822e8a76c8e27921a">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-utils-25.2.0_02cadf01028b7dfe3e51adf15c7fc71cce32b8de\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\support-compat\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-compat-25.2.0_55fac0efd6e6f9559059f8e0169187a72370cf0c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\support-core-ui\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-support-core-ui-25.2.0_9677b4ca4d7655b8d2d5b8b25858e044d3ab3146\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-animated-vector-drawable-25.2.0_5d114c599937ec468aa3828f0d51e9a2286ae0f4\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\25.2.0\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="702d339bc0a81d21354cd7e2cf2b67225fa4a16c">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\com.android.support-appcompat-v7-25.2.0_f661c90514561b3091df8e5344619e4e18de7623\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="9fb079f001fee2572fe942cc9ecd4e99704b1751">
+        <dex dex="C:\Users\jakha\Desktop\AndroidClient\app\build\intermediates\transforms\dex\debug\folders\1000\10\instant-run-bootstrap_900398b0fdd10da3dd1fe18410e814929cbc69d1\classes.dex" />
+    </item>
+
+</items>

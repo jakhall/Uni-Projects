@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\jakha\\Desktop\\AndroidClient\\app\\build\\intermediates\\res\\merged\\debug\\menu\\blank_menu.xml",
+        "source": "C:\\Users\\jakha\\Desktop\\AndroidClient\\app\\src\\main\\res\\menu\\blank_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\jakha\\Desktop\\AndroidClient\\app\\build\\intermediates\\res\\merged\\debug\\menu\\menu_main.xml",
+        "source": "C:\\Users\\jakha\\Desktop\\AndroidClient\\app\\src\\main\\res\\menu\\menu_main.xml"
+    }
+]
