@@ -1,0 +1,90 @@
+package aurora.view;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+import aurora.controller.BaseController;
+import aurora.controller.DocumentController;
+import aurora.controller.HomeController;
+import aurora.controller.LoginController;
+import aurora.model.Document;
+import aurora.model.LoginModel;
+import aurora.model.Profile;
+import aurora.model.Session;
+import java.awt.Color;
+import java.awt.Dimension;
+
+import javax.swing.border.MatteBorder;
+import java.awt.Insets;
+
+public class DocumentPanel extends MainPanel {
+	
+	private DocumentController theController;
+	
+	private JTextArea documentText;
+	private JLabel postedByLbl;
+	private JScrollPane textScroll;
+	private JLabel lblTitle;
+	private JLabel lblPostedBy;
+	
+	public DocumentPanel(DocumentController documentController) {
+		super(documentController);
+		theController = documentController;
+		
+		setupPanel();
+		setupData();
+		setupListeners();
+	}
+	
+	//setupPanel - adds all the visual elements, defines their properties.
+	
+	protected void setupPanel() {
+		super.setupPanel();
+		this.setPreferredSize(new Dimension(500, 600));
+		SpringLayout springLayout = (SpringLayout) contentPanel.getLayout();
+		
+		textScroll = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.NORTH, textScroll, 60, SpringLayout.NORTH, contentPanel);
+		springLayout.putConstraint(SpringLayout.WEST, textScroll, 52, SpringLayout.WEST, contentPanel);
+		springLayout.putConstraint(SpringLayout.SOUTH, textScroll, 394, SpringLayout.NORTH, contentPanel);
+		springLayout.putConstraint(SpringLayout.EAST, textScroll, -48, SpringLayout.EAST, contentPanel);
+		contentPanel.add(textScroll);
+		
+		documentText = new JTextArea();
+		documentText.setWrapStyleWord(true);
+		documentText.setLineWrap(true);
+		documentText.setEditable(false);
+		textScroll.setViewportView(documentText);
+		
+		lblTitle = new JLabel("Title");
+		springLayout.putConstraint(SpringLayout.WEST, lblTitle, 0, SpringLayout.WEST, textScroll);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblTitle, -10, SpringLayout.NORTH, textScroll);
+		contentPanel.add(lblTitle);
+		
+		lblPostedBy = new JLabel("Post By:");
+		springLayout.putConstraint(SpringLayout.NORTH, lblPostedBy, 0, SpringLayout.NORTH, lblTitle);
+		springLayout.putConstraint(SpringLayout.WEST, lblPostedBy, -212, SpringLayout.EAST, contentPanel);
+		springLayout.putConstraint(SpringLayout.EAST, lblPostedBy, 0, SpringLayout.EAST, textScroll);
+		lblPostedBy.setHorizontalAlignment(SwingConstants.TRAILING);
+		contentPanel.add(lblPostedBy);
+		
+		
+	}
+	
+	//setupData - adds all the necessary data retrieved from the controller.
+	
+	public void setupData() {
+		super.setupData();
+	    Document doc = theController.getDocument();
+	    lblTitle.setText(doc.getTitle());
+	    documentText.setText(doc.getText());
+	    lblPostedBy.setText("Posted By: " + doc.getAuthor().getUsername());
+	}
+	
+	
+	//setupListeners - adds listeners to all of the necessary fields and buttons.
+	protected void setupListeners() {
+		super.setupListeners();
+
+	}
+}

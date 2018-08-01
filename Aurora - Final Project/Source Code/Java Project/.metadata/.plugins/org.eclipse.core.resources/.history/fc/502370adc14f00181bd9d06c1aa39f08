@@ -1,0 +1,73 @@
+package aurora.controller;
+
+import java.util.ArrayList;
+import aurora.model.Profile;
+import aurora.model.SearchModel;
+import aurora.model.Session;
+import aurora.view.BasePanel;
+import aurora.view.ProfilePanel;
+import aurora.view.SearchPanel;
+
+/**
+ * 
+ * Search Controller - controls the search view, allows a new user to view results from
+ * an inputted query.
+ * 
+ */
+
+public class SearchController extends BaseController {
+
+		private SearchModel theModel;
+		private String theQuery;
+		private int observerNum;
+		private int resultNumber;
+		private ArrayList<Profile> userList;
+		
+		
+		//Stores the session and the input query, creates a new search model.
+		
+		public SearchController(Session s, String query) {
+			theSession = s;
+			theQuery = query;
+			theModel = new SearchModel(s);	
+		}
+		
+		public Session getSession() {
+			return theSession;
+		}
+		
+		
+		//getResultsUsername - returns a list of username's of profiles associated with the query.
+		public String[] getResultsUsername() {
+			userList = theModel.getUserResults(theQuery);
+			resultNumber = userList.size();
+			String[] strArr = new String[resultNumber];
+			for(int i = 0; i < resultNumber; i++) {
+				strArr[i] = userList.get(i).getUsername();
+			}
+			return strArr;
+		}
+		
+		
+		public int getResultNumber() {
+			return resultNumber;
+		}
+		
+		public void viewUser(int index) {
+			Profile user = userList.get(index);
+			ProfileController pc = new ProfileController(theSession, user);
+			pc.setPreviousPanel((BasePanel) theFrame.getContentPane());
+			pc.setFrame(theFrame);
+			ProfilePanel pp = new ProfilePanel(pc);
+			theFrame.setContentPane(pp);
+			theFrame.pack();
+			
+		}
+		
+		public void search(String query) {
+			theQuery = query;
+			((SearchPanel) theFrame.getContentPane()).setupData();
+		}
+		
+}
+

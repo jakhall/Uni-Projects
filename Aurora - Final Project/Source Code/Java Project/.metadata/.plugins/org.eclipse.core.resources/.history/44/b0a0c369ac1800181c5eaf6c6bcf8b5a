@@ -1,0 +1,100 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+class Main {
+	
+	public static void main(String args[]) throws Exception{
+		
+		ArrayList<String> stringList = new ArrayList<String>();
+		TextParser parser = new TextParser();
+		
+		stringList.add(parser.read("resources/1.txt"));
+		stringList.add(parser.read("resources/2.txt"));
+		stringList.add(parser.read("resources/3.txt"));
+		stringList.add(parser.read("resources/4.txt"));
+		stringList.add(parser.read("resources/5.txt"));
+		stringList.add(parser.read("resources/6.txt"));
+		stringList.add(parser.read("resources/7.txt"));
+		
+		TextSplitter splitter = new TextSplitter();
+		FrequencyAssigner assigner = new FrequencyAssigner(); 
+		TextDatabase database = new TextDatabase();
+		WordSorter sorter = new WordSorter();
+		CosineSimilarity similarity = new CosineSimilarity();
+		
+		for(String string : stringList){
+		
+		ArrayList<Word> wordList = splitter.splitText(string);
+		ArrayList<TextWord> textWordList = assigner.initiate(wordList);
+		Document document = new Document(string, textWordList);
+		database.addDocument(document);
+		
+		}
+		
+		database.calculateDocFrequency();
+		database.calculateTFIDF();
+		
+		
+		
+		ArrayList<Document> docList = database.getDocuments();
+		ArrayList<DocumentWord> wordList;
+		
+		
+		
+		WordStemmer stemmer = new WordStemmer();
+		
+		/**
+		System.out.println(stemmer.Stem("caresses"));
+		System.out.println(stemmer.Stem("ponies"));
+		System.out.println(stemmer.Stem("ties"));
+		System.out.println(stemmer.Stem("caress"));
+		System.out.println(stemmer.Stem("cat");
+		System.out.println(stemmer.Stem("singing"));
+		System.out.println(stemmer.Stem("motoring"));
+		System.out.println(stemmer.Stem("sing"));
+		System.out.println(stemmer.Stem("sauces"));
+		
+		**/
+		
+		
+		for(int i = 0; i < docList.size(); i++){
+			System.out.println("Document : " + (i + 1));
+			System.out.println();
+			wordList = docList.get(i).getWordList();
+			wordList = sorter.sort(wordList);
+			
+			for(int j = 0; j < 25; j++){
+				System.out.println(wordList.get(j).getWord() + " " + wordList.get(j).getTFIDF());
+			}
+			
+			System.out.println();
+		}
+		
+		String queryString = "arctic coffee women frog lizard german";
+		
+		Query query;
+		
+		while(!queryString.equals("end")){
+			
+			ArrayList<Word>	querySplit = splitter.splitText(queryString);
+			
+			int i = 0;
+			for(Document docs : database.getDocuments()){
+				query = new Query(querySplit, database);
+				double similarity1 = similarity.equate(database.getDocuments().get(i), query);
+				i++;
+				System.out.println("Dot Product: " + similarity.getDotProduct() + " Norm 1: " + similarity.getVector1Norm()
+				+ " Norm 2: " + similarity.getVector2Norm());
+				System.out.println("Similarity for " + i + ": " + similarity1);
+			}
+			
+			queryString = BIO.getString();
+			
+		}
+		
+		
+		
+	}
+
+}

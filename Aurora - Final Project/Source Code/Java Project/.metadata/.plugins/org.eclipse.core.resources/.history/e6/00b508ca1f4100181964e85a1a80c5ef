@@ -1,0 +1,45 @@
+package aurora.model;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+
+public class RegisterModel extends BaseModel {
+	
+	ProfileDatabase profileDB;
+	Document[] documents = null;
+	Profile[] observers = null;
+	Profile[] observing = null;
+	
+	public RegisterModel(Connection conn) {
+		this.conn = conn;
+		profileDB = new ProfileDatabase(conn);
+	}
+
+	public ProfileDatabase getProfileDatabase() {
+		return profileDB;
+	}
+	
+	
+	public Profile registerUser(Profile user) {
+		String sql = "INSERT INTO table_name (Username, Password, Age, FirstName, LastName)"
+					+ "VALUES ('" + user.getUsername() + "', " + user.getPassword() + "', " 
+					+ user.getAge() + "', " + user.getFirstName() + "', " + user.getLastName() + ")";
+		
+		profileDB.updateDatabase(sql);
+		
+		return profileDB.getLogin(user.getUsername(), user.getPassword());
+		
+	}
+	
+	public Session createSession(Profile user) {
+			profileDB.addUserLinks(user);
+			theSession = new Session(user, conn);
+			return theSession;
+	}
+
+
+}

@@ -1,0 +1,95 @@
+package aurora.retrieval;
+import java.sql.*;
+import java.util.ArrayList;
+
+import aurora.model.DBConnection;
+import aurora.model.Document;
+import aurora.model.ProfileDatabase;
+import aurora.model.TextParser;
+
+public class TestRetrieval {
+	
+	public static void main(String args[]) throws Exception{
+		
+		Connection conn = null;
+		Statement stmt = null;
+		
+		conn = DBConnection.dbConnector();
+		
+		stmt = conn.createStatement();
+		
+		VectorSpaceModel vsm = new VectorSpaceModel(conn);
+		ProfileDatabase db = new ProfileDatabase(conn);
+		
+		ArrayList<String> stringList = new ArrayList<String>();
+		
+		TextParser parser = new TextParser();
+		
+		//Load text files
+		stringList.add(parser.read("resources/1.txt").replaceAll("'", ""));
+		stringList.add(parser.read("resources/2.txt").replaceAll("'", ""));
+		stringList.add(parser.read("resources/3.txt").replaceAll("'", ""));
+		stringList.add(parser.read("resources/4.txt").replaceAll("'", ""));
+		stringList.add(parser.read("resources/5.txt").replaceAll("'", ""));
+		stringList.add(parser.read("resources/6.txt"));
+		stringList.add(parser.read("resources/lizards.txt"));
+		stringList.add(parser.read("resources/dogs.txt"));
+		stringList.add(parser.read("resources/rabbits.txt"));
+		
+		
+	
+		Document doc1 = new Document(stringList.get(6));
+		Document doc2 = new Document(stringList.get(7));
+		Document doc3 = new Document(stringList.get(8));
+		
+
+		
+		
+		int index = 0;
+		String sql;
+		ResultSet rs;
+		
+	
+		db.addNewDocument(doc1);
+		
+		sql = "SELECT MAX(DocumentID) FROM DOCUMENT_Table";
+		rs = db.queryDatabase(sql);
+		while(rs.next()) {
+			index = rs.getInt(1);
+		}
+		
+		Document newDoc1 = db.getDocument(index);
+		
+		db.addNewDocument(doc2);
+		
+		sql = "SELECT MAX(DocumentID) FROM DOCUMENT_Table";
+		rs = db.queryDatabase(sql);
+		while(rs.next()) {
+			index = rs.getInt(1);
+		}
+		
+		Document newDoc2 = db.getDocument(index);
+		
+		db.addNewDocument(doc3);
+		
+		sql = "SELECT MAX(DocumentID) FROM DOCUMENT_Table";
+		rs = db.queryDatabase(sql);
+		while(rs.next()) {
+			index = rs.getInt(1);
+		}
+		
+		Document newDoc3 = db.getDocument(index);
+		
+	
+		vsm.newDocument(newDoc1);
+		vsm.newDocument(newDoc2);
+		vsm.newDocument(newDoc3);
+
+		
+		System.out.println("Complete, have a cookie!");
+
+		
+		
+
+	}
+}

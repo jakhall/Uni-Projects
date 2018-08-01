@@ -1,0 +1,17 @@
+package aurora.controller;
+
+
+/**
+ * 
+ * Guide Controller - Used to control the guide panel.
+ * 
+ */
+
+public class GuideController extends BaseController {
+
+		
+		public GuideController() {
+			
+		}
+		
+}

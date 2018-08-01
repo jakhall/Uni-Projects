@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="aurora.main.DocListActivity">
+
+    <include layout="@layout/toolbar_layout"
+        android:id="@+id/include" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="642dp"
+        android:padding="20dp">
+
+        <Button
+            android:text="Save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSave"
+            android:layout_below="@+id/documentScroll"
+            android:layout_alignLeft="@+id/documentScroll"
+            android:layout_alignStart="@+id/documentScroll"
+            android:visibility="invisible" />
+
+        <Button
+            android:text="Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnEdit"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/documentScroll" />
+
+        <TextView
+            android:text="Published By:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lblAuthor"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="12sp"
+            android:gravity="end"
+            android:layout_marginTop="116dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            app:srcCompat="@drawable/default_blue"
+            android:layout_alignBottom="@+id/lblAuthor"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/documentIcon"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="@drawable/black_border"
+            android:padding="2dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="Name"
+            android:ems="10"
+            android:id="@+id/fldTitle"
+            android:background="@null"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_alignTop="@+id/documentIcon"
+            android:layout_toRightOf="@+id/btnSave"
+            android:layout_toEndOf="@+id/btnSave"
+            android:layout_marginTop="10dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:id="@+id/documentScroll"
+            android:background="@drawable/black_border"
+            android:padding="8dp"
+            android:nestedScrollingEnabled="false"
+            android:layout_height="330dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:clickable="false"
+            android:touchscreenBlocksFocus="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:ems="10"
+                android:id="@+id/documentText"
+                android:background="@null"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:textSize="14sp"
+                android:layout_marginTop="5dp" />
+        </ScrollView>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lblDate"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/fldTitle"
+            android:layout_alignLeft="@+id/fldTitle"
+            android:layout_alignStart="@+id/fldTitle" />
+
+        <Button
+            android:text="Choose"
+            android:layout_width="50dp"
+            android:id="@+id/btnChoose"
+            android:textSize="6sp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/documentScroll"
+            android:layout_alignRight="@+id/documentIcon"
+            android:layout_alignEnd="@+id/documentIcon"
+            android:layout_marginRight="-4dp"
+            android:linksClickable="false"
+            android:clickable="false"
+            android:visibility="invisible" />
+
+        <Button
+            android:text="Profile"
+            android:layout_height="40dp"
+            android:id="@+id/btnProfile"
+            android:textSize="12sp"
+            android:layout_width="80dp"
+            android:layout_alignBaseline="@+id/fldTitle"
+            android:layout_alignBottom="@+id/fldTitle"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

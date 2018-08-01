@@ -1,0 +1,395 @@
+package aurora.model;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import aurora.view.HomePanel;
+
+/**
+ * 
+ * Profile Database - Used to save and retrieve table records from the database.
+ *
+ */
+
+
+public class ProfileDatabase {
+	
+	ArrayList<Profile> profiles = new ArrayList<Profile>();
+	Connection conn = null;
+	Statement stmt = null;
+	String sql;
+	int id;
+	int age;
+	String username;
+	String password;
+	
+	
+	//Stores the connection and creates a statement
+	//object to communicate with database.
+	
+	public ProfileDatabase(Connection c){
+		conn = c;
+		try {
+			stmt = conn.createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+	} 
+	
+	//getAllUsers - returns all the users from the USER_Table.
+	
+	public ArrayList<Profile> getAllUsers(){
+		
+		ArrayList<Profile> users = new ArrayList<Profile>();
+		
+		sql = "Select * From USER_Table";
+		ResultSet rs = queryDatabase(sql);
+		users = createProfiles(rs);
+		return users;
+		
+	}
+	
+	//getAllDocuments - returns all the documents from the DOCUMENT_Table.
+	
+	public ArrayList<Document> getAllDocuments(){
+		
+		ArrayList<Document> documents = new ArrayList<Document>();
+		
+		sql = "Select * From DOCUMENT_Table";
+		ResultSet rs = queryDatabase(sql);
+		documents = createDocuments(rs);
+		return documents;
+		
+	}
+	
+	//addNewDocument - inserts a new row into the DOCUMENT_Table with the information from a document object.
+	
+	public void addNewDocument(Document doc) {
+		int author = doc.getAuthor().getUserID();
+		sql = "INSERT INTO DOCUMENT_Table (AuthorID, Title, ImageLocation, TextLocation, LastUpdated)"
+				+ " VALUES(" + author + ", '" + doc.getTitle() + "', '" + doc.getImageLocation() + "', '" + doc.getTextLocation() + "', '" + doc.getLastUpdated() + "' )";
+		updateDatabase(sql);
+	}
+	
+	
+	//getUserDocuments - returns all documents that are created by the selected user.
+	
+	public ArrayList<Document> getUserDocuments(Profile u) {
+		sql = "SELECT * FROM DOCUMENT_Table WHERE AuthorID=" + u.getUserID() + " ORDER BY DocumentID";
+		ResultSet rs = queryDatabase(sql);
+		ArrayList<Document> documentList = null;
+		documentList = createDocuments(rs);
+		
+		return documentList;
+	}
+	
+	
+	
+	public ArrayList<Integer> getViewedDocuments(int userId){
+		sql = "SELECT DocumentID FROM HISTORY_Table WHERE UserID=" + userId;
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		ResultSet rs = queryDatabase(sql);
+		try {
+			while(rs.next()) {
+				ids.add(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return ids;
+	}
+	
+	
+	
+	//getObservers - returns all profiles that are observing the input user.
+	
+	public ArrayList<Profile> getObservers(Profile u){
+		sql = "SELECT * FROM OBSERVER_Table WHERE UserID=" + u.getUserID();
+		ResultSet rs = queryDatabase(sql);
+		ArrayList<Integer> observerID = new ArrayList<Integer>();
+		ArrayList<Profile> observers = new ArrayList<Profile>();
+		
+		Profile user;
+		try {
+			while(rs.next()) {
+					observerID.add(rs.getInt(2));
+				}
+			for(int id : observerID) {
+				user = getUser(id);
+				observers.add(user);
+			}
+		
+				return observers;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	//getObserving - returns all profiles that are being observed by the input user.
+	
+	public ArrayList<Profile> getObserving(Profile u){
+		sql = "SELECT * FROM OBSERVER_Table WHERE ObserverID=" + u.getUserID();
+		ResultSet rs = queryDatabase(sql);
+		ArrayList<Integer> userID = new ArrayList<Integer>();
+		ArrayList<Profile> observers = new ArrayList<Profile>();
+		Profile user;
+		try {
+			while(rs.next()) {
+					userID.add(rs.getInt(3));
+				}
+			for(int id : userID) {
+				user = getUser(id);
+				observers.add(user);
+			}
+			return observers;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	//getUser - returns the user with the input user id if one exists.
+	
+	public Profile getUser(int id) {
+		sql = "SELECT * FROM USER_Table WHERE UserID=" + id;
+		ResultSet rs = queryDatabase(sql);
+		ArrayList<Profile> profiles = createProfiles(rs);
+		Profile user = null;
+		if(profiles.size() > 0) {
+			user = profiles.get(0);
+		}
+		
+		return user;
+	}
+	
+	//getDocument - returns the document with the input document id if one exists.
+	
+	public Document getDocument(int id) {
+		sql = "SELECT * FROM DOCUMENT_Table WHERE DocumentID=" + id;
+		ResultSet rs = queryDatabase(sql);
+		ArrayList<Document> documents = createDocuments(rs);
+		Document doc = null;
+		if(documents.size() > 0) {
+			doc = documents.get(0);
+		}
+		
+		return doc;
+	}
+	
+	//getLogin - returns the user with the input username and password if one exists.
+	
+	public Profile getLogin(String u, String p){
+				
+		sql = "Select * From USER_Table WHERE Username='" + u + "' AND Password='" + p + "'";
+		ResultSet rs = queryDatabase(sql);
+		ArrayList<Profile> profiles = createProfiles(rs);
+		Profile user = null;
+		if(profiles.size() > 0) {
+			user = profiles.get(0);
+		}
+		
+		return user;
+	}
+	
+	//createProfile - gets each column from the result set, 
+	//adds the information to a new Profile object.
+	
+	public ArrayList<Profile> createProfiles(ResultSet rs) {
+		ArrayList<Profile> profiles = new ArrayList<Profile>();
+		String dob = "";
+		try {
+			while(rs.next()) {
+				Profile user;
+				id = rs.getInt(1);
+				dob = rs.getInt(9);
+				username = rs.getString(2);
+				password = rs.getString(3);
+				String firstName = rs.getString(6);
+				String lastName = rs.getString(7);
+				String defaultColor = rs.getString(8);
+				String email = rs.getString(4);
+				String title = rs.getString(5);
+				user = new Profile(id, username, password);
+				user.setDetails(title, age, firstName, lastName);
+				user.setEmail(email);
+				user.setImage(getImage(rs.getString(10)));
+				user.setDefaultColor(defaultColor);
+				profiles.add(user);
+			}
+			for(Profile user : profiles) {
+				user.setDocuments(getUserDocuments(user));
+			}
+			return profiles;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	
+	
+	//removeDocument - deletes the record(s) from the DOCUMENT_Table and HISTORY_Table with the affiliated document id.
+	
+	public void removeDocument(int docID) {
+		sql = "DELETE FROM DOCUMENT_Table WHERE DocumentID=" + docID;
+		updateDatabase(sql);
+		sql = "DELETE FROM HISTORY_Table WHERE DocumentID=" + docID;
+		updateDatabase(sql);
+	}
+	
+	
+	//createDocument - gets each column from the result set, 
+	//adds the information to a new Document object.
+	
+	public ArrayList<Document> createDocuments(ResultSet rs){
+		ArrayList<Document> documentList = new ArrayList<Document>();
+		try {
+			while(rs.next()) {
+				Document doc = new Document(rs.getInt(1), rs.getString(3));
+				doc.setImage(getImage(rs.getString(6)));
+				doc.setText(getDocumentText(rs.getString(7)));
+				doc.setLastUpdated(rs.getString(8));
+				documentList.add(doc);
+				}
+				return documentList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	//parseDate - converts a string date into a java date object.
+	
+	public java.util.Date parseDate(String dateText) {
+
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		java.util.Date date = null;
+		try {
+			date =  dateFormat.parse(dateText);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return date;
+	}
+	
+	
+	//getDocumentText - reads and returns the text stored in a specific location in the profile data folder.
+	
+	public String getDocumentText(String location) {
+		TextParser parser = new TextParser();
+		String s = File.separator;
+		String url = System.getenv("APPDATA") + s + "Aurora" + s + "profile_data" + location;
+		String text = "";
+		try {
+			text = parser.read(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return text;
+	}
+	
+	//getImage - reads and returns the image stored in a specific location in the profile data folder.
+	
+	public byte[] getImage(String location) {
+		
+		String s =  File.separator;
+		
+		File imageFile = new File(System.getenv("APPDATA") + s + "Aurora" + s + "profile_data" + location);
+				
+		try {
+			return Files.readAllBytes(imageFile.toPath());
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	
+	
+	//getAuthor - returns the user that initially created a given document.
+	
+	public Profile getAuthor(Document doc) {
+		sql = "SELECT * FROM DOCUMENT_Table WHERE DocumentID=" + doc.getID();
+		ResultSet rs = queryDatabase(sql);
+		Profile author = null;
+		try {
+			author = getUser(rs.getInt(2));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return author;
+	}
+	
+	//addUserLinks - adds the observers and observingList to the input Profile object.
+	
+	public Profile addUserLinks(Profile u){
+			u.setObservers(getObservers(u));
+			u.setObservingList(getObserving(u));
+		return u;
+	}
+	
+	//queryDatabase - Retrieve the result set from the database response to an SQL statement.
+	
+	public ResultSet queryDatabase(String sql) {
+		ResultSet rs = null;
+		
+		try {
+			rs = stmt.executeQuery(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return rs;
+	}
+	
+	
+	//updateDatabase - Updates the database with the specified SQL statement.
+	
+	public boolean updateDatabase(String sql) {
+	
+		try {
+			stmt.executeUpdate(sql);
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	
+	//editString - updates a table row from any table with any value.
+	
+	public void editString(String tbl, String idCol, String valCol, String val, int id) {
+		sql= "UPDATE " + tbl + "_table SET " + valCol + "='" +  val + "' WHERE " + idCol + "=" + id;
+		updateDatabase(sql);
+	}
+	
+	//removeUser - deletes the row from the USER_Table which is affiliated with the input user.
+	
+	public boolean removeUser(Profile p) {
+		int index;
+		
+		index = profiles.indexOf(p);
+		if(index >= 0) {
+			profiles.remove(index);
+		} else {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
+}

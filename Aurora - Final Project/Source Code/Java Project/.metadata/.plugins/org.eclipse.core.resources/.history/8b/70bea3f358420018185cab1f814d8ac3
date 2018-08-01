@@ -1,0 +1,10 @@
+
+class ServerLauncher {
+
+	public static void main(String[] args) {
+		AuroraServer server = new AuroraServer();
+		server.communicate();
+	}
+	
+	
+}

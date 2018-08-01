@@ -1,0 +1,124 @@
+package aurora.remote;
+
+import java.util.ArrayList;
+import aurora.model.Document;
+import aurora.model.Profile;
+import aurora.model.SearchModel;
+import aurora.model.Session;
+import aurora.network.Request;
+import aurora.network.Response;
+
+/**
+ * 
+ * Search Invoker - Handles tasks requested by the clients search view.
+ *
+ */
+
+public class SearchInvoker extends BaseInvoker {
+
+		private SearchModel theModel;
+		private String theQuery;
+		private int resultNumber;
+		private ArrayList<Profile> userList;
+		
+
+		//Stores the session and the input query, creates a new search model.
+		
+		public SearchInvoker(Session s, String query) {
+			super(s);
+			theSession = s;
+			theQuery = query;
+			theModel = new SearchModel(s);	
+		}
+		
+		//getResultUsers - returns all users affiliated with the query results.
+
+		public ArrayList<Profile> getResultUsers(){
+			return theModel.getUserResults(theQuery);
+		}
+		
+		//getResultNumber - returns the total number of results.
+		
+		public int getResultNumber() {
+			return resultNumber;
+		}
+		
+		//viewUser - changes the active invoker to the profile invoker for the selected user.
+		
+		public void viewUser(int id) {
+			Profile user = theModel.getUser(id);
+			ProfileInvoker invoker = new ProfileInvoker(theSession, user);
+			invoker.setPreviousInvoker(this);
+			theSession.getSocket().setInvoker(invoker);
+		}
+		
+		//searchQuery - updates the query string, returns the new results.
+		
+		public ArrayList<Profile> searchQuery(String query) {
+			theQuery = query;
+			return getResultUsers();
+		}
+		
+		//getResultDocuments - returns the documents affiliated with the query results.
+		
+		public ArrayList<Document> getResultDocuments(String query, int position) {
+			return theModel.getDocumentResults(query, position, 10);
+		}
+		
+		public String getQuery() {
+			return theQuery;
+		}
+		
+		//viewDocument - changes the active invoker to the document invoker for the selected document.
+		
+		public void viewDocument(int id) {
+			Document doc = theModel.getDocument(id);
+			theModel.addAuthor(doc);
+			DocumentInvoker invoker = new DocumentInvoker(theSession, doc, !isAuthor(doc));
+			invoker.setPreviousInvoker(this);
+			theSession.getSocket().setInvoker(invoker);
+		}
+		
+		//isAuthor - checks whether the active user is equal to the author of the document.
+		
+		public boolean isAuthor(Document doc) {
+			if(doc.getAuthor().getUserID() == theSession.getUser().getUserID()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		
+		
+		//handleRequest - Dictates what method should be called for each incoming request, 
+		//returns the corresponding response.
+		public Response handleRequest(Request request) {
+			
+			Response response = super.handleRequest(request);
+			int index = request.getMethod();
+			switch(index) {
+				case 3 : String query = (String)request.getObject();
+						 response = new Response(searchQuery(query));
+						 break;
+				case 4 : response = new Response(getResultUsers());
+						 break;
+				case 5:  query = (String)request.getObject();
+						 int position = request.getValue();
+						 response = new Response(getResultDocuments(query, position));
+						 break;
+				case 6 : if(request.getSwitch()) {
+						 viewUser(request.getValue());
+						 } else {
+						 viewDocument(request.getValue());
+						 }
+						 break;
+				case 7 : response = new Response(getQuery());
+						 break;
+				}
+			
+			return response;
+		}
+		
+}
+

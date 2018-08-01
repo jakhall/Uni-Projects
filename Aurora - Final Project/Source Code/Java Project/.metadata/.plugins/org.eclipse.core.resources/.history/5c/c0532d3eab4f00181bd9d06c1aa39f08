@@ -1,0 +1,346 @@
+package aurora.model;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class WordStemmer {
+	
+	private boolean[] success = new boolean[60];
+	private boolean check = false;
+	private int measure;
+	private boolean containsVowel = false;
+	private boolean endsWithDouble = false;
+	private boolean endsInPattern = false;
+	
+	private SuffixReplacer replacer;
+	private ConditionDecorator decoratedReplacer;
+	
+	public WordStemmer(){
+		
+	}
+	
+	public String Stem(String s){
+		String string = s;
+		analyse(s);
+		check = false;
+		string = porter1a(string);
+		string = porter1b(string);
+		string = porter1c(string);
+		string = porter2(string);
+		string = porter3(string);
+		string = porter4(string);
+		return string;
+		
+	}
+
+	
+	private String endsIn(String s, String suffix, String replace, int i, int[] con){
+		String string = s;
+		
+		if(!check){
+			if (string.endsWith(suffix)){
+				string = string.substring(0, string.length() - suffix.length());
+				string = string + replace;
+				check = true;
+				success[i] = true;
+			}
+		}
+		
+		return string;
+	}
+	
+	
+	
+	private String endsIn(String s, String suffix, String replace, int i){
+		return endsIn(s, suffix, replace, i, null);
+			
+	}
+	
+	
+	private void analyse(String s){
+	
+		ArrayList<Boolean> pattern = createPattern(s);
+		
+		String string = s; 
+		
+		int len = string.length();
+		
+		
+		if(pattern.size() <= 1){
+			measure = 0;
+		} else {
+			measure = (int) Math.ceil((double)pattern.size()/2);
+			
+			pattern.addAll(createPattern(string.substring(len - 2)));
+			
+			endsInPattern = hasPattern(pattern, string.charAt(len - 1));
+		}
+
+
+	
+	
+		/**
+		System.out.println("Vowel: " + containsVowel);
+		System.out.println("Pattern: " + endsInPattern);
+		System.out.println("Measure: " + measure);
+		System.out.println("Double: " + endsWithDouble);
+		System.out.println(pattern);
+		**/
+	}
+	
+	
+	private boolean doubleConsonant(String s){
+		
+		int len = s.length();
+		
+		char c1 = s.charAt(len - 2);
+		char c2 = s.charAt(len - 1);
+		
+		if(("aeiouyzls".indexOf(c1) < 0) && (c1 == c2)){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	private boolean hasPattern(ArrayList<Boolean> p, char c){
+		
+		List<Boolean> subPattern;
+		List<Boolean> pattern = new ArrayList<Boolean>();
+		
+		pattern.add(false);
+		pattern.add(true);
+		pattern.add(false);
+		
+		
+		int similarity;
+		
+		if(p.size() >= 3){
+			subPattern = p.subList(p.size() - 3, p.size() - 1);
+			subPattern.retainAll(pattern);
+			similarity = subPattern.size();
+			if((similarity == 3) && (("wxy").indexOf(c) < 0)) {
+				return true;
+			}
+		}
+		
+		return false;
+			
+		
+	}
+	
+	private ArrayList<Boolean> createPattern(String s){
+		
+		
+		
+		ArrayList<Boolean> pattern = new ArrayList<Boolean>();
+		
+		Boolean condition;
+		
+		if(s.length() <= 1){
+			if(s.length() > 0){
+				if(isVowel(s.charAt(0))){
+					pattern.add(true);
+				} else {
+					pattern.add(false);
+				}
+			}
+				return pattern;
+		}
+			
+		
+		for(int i = 1; i < (s.length() - 1); i++){
+				if(isVowel(s.charAt(i)) || (s.charAt(i) == 'y') && (!isVowel(s.charAt(i - 1)))){
+					condition = true;
+					containsVowel = true;
+				} else {
+					condition = false;
+				}
+				
+				
+				if(pattern.size() > 0){
+					if(pattern.get(pattern.size() - 1) != condition){
+						pattern.add(condition);
+					}
+				}  else {
+					pattern.add(condition);
+				}	
+			
+		}
+			return pattern;
+		
+	}
+	
+	private boolean isVowel(char c){
+		
+		if("eaiou".indexOf(c) >= 0){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	
+	private boolean containsVowel(String s){
+		
+		for(int i = s.length() - 0; i > 1; i++){
+			if(isVowel(s.charAt(i))){
+				return true;
+			} else if(s.charAt(i) == 'y') {
+				if(i < 1){
+					return false;
+				} else if(!isVowel(s.charAt(i - 1))){
+					return true;
+				}
+				
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	private String replace(SuffixReplacer sr, int i){
+		if(!check){
+			String string = sr.getReplaced();
+			check = sr.Success();
+			success[i] = check;
+			return string;
+		}
+		return sr.getOriginal();
+	}
+	
+	private SuffixReplacer createReplacer(String string, String suffix, String replacement){
+		
+			return new SuffixReplacer(string, suffix, replacement);
+
+	}
+	
+	
+	private String porter1a(String s){
+		
+		String string = s;
+		SuffixReplacer replacer;
+		
+		
+		replacer = createReplacer(string, "sses", "ss");
+		string = replace(replacer, 0);
+		replacer = createReplacer(string, "ies", "i");
+		string = replace(replacer, 1);
+		
+		
+		replacer = createReplacer(string, "ss", "ss");
+		string = replace(replacer, 2);
+		
+		replacer = createReplacer(string, "s", "");
+		string = replace(replacer, 3);
+		
+		
+		return string;
+	}
+	
+	
+	private String porter1b(String s){
+		
+		check = false;
+		
+		String string = s;
+		
+		if(measure > 0){
+			replacer = createReplacer(s, "eed", "ee");
+			string = replace(replacer, 4);
+		}
+		
+		replacer = createReplacer(string, "ed", "");
+		decoratedReplacer = new VowelConDecorator(replacer, false);
+		string = replace(decoratedReplacer, 5);
+		
+		replacer = createReplacer(string, "ing", "");
+		decoratedReplacer = new VowelConDecorator(replacer, false);
+		string = replace(decoratedReplacer, 6);
+		
+
+
+		return string;
+	}
+	
+	private String porter1c(String s){
+		String string = s;
+		
+		replacer = createReplacer(string, "y", "i");
+		decoratedReplacer = new VowelConDecorator(replacer, false);
+		string = replace(decoratedReplacer, 7);
+		
+		return string;
+		
+	}
+	
+	
+	private String porter2(String s){
+		String string = s;
+		check = false;
+		String[] changes = {"ational", "ate", "tional", "tion", "enci", "enc", "anci", "ance",
+				"izer", "ize", "abli", "able", "alli", "al", "entli", "ent", "eli", "e", "ousli",
+				"ous", "ization", "ize", "ation", "ate", "ator", "ate", "alism", "al", "iveness", "ive",
+				"fulness", "ful", "ousness", "ous", "aliti", "al", "iviti", "ive", "biliti", "ble"};
+
+		if(measure > 0){
+			for(int i = 0; i < changes.length; i+=2){
+				replacer = createReplacer(string, changes[i], changes[i+1]);
+				string = replace(replacer, 8 + i);
+			}
+		}
+		
+		return string;
+	}
+	
+	
+	private String porter3(String s){
+		String string = s;
+		check = false;
+		String[] changes = {"icate", "ic", "atitiv", "", "alize", "al", "iciti", "ic", "ical", "ic",
+				"ful", "", "ness", ""};
+
+		if(measure > 0){
+			for(int i = 0; i < changes.length; i+=2){
+				replacer = createReplacer(string, changes[i], changes[i+1]);
+				string = replace(replacer, 8 + i);
+			}
+		}
+		
+		return string;
+	}
+	
+	
+	private String porter4(String s){
+		String string = s;
+		check = false;
+		String[] changes = {"al", "ance", "ence", "er", "ic", "able", "ible", "ant", "ement", "ment", "ent",
+				"ion", "ou", "ism", "ate", "iti", "ous", "ive", "ize"};
+
+		if(measure > 1){
+			for(int i = 0; i < changes.length; i++){
+				replacer = createReplacer(string, changes[i], "");
+				string = replace(replacer, 8 + i);
+			}
+		}
+		
+		return string;
+	}
+	
+	
+	private String porter5a(String s) {
+		if(measure > 0) {
+			
+		}
+	}
+	
+	private String porter5b(String s) {
+		
+	}
+	
+
+}

@@ -1,0 +1,12 @@
+
+cmp = 0xFB00
+
+start:   loco 4
+           push
+loop1: loco 2
+          cmp start
+          loco 2
+          push
+          jump loop1
+         
+        

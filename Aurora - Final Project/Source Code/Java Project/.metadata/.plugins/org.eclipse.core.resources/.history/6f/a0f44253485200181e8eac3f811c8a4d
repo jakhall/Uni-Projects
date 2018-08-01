@@ -1,0 +1,315 @@
+package aurora.model;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+
+import aurora.retrieval.CosineSimilarity;
+import aurora.retrieval.VectorSpaceModel;
+
+/**
+ * 
+ * Home Model - The model for the home views of the system, interacts with the 
+ * database and vector space model.
+ *
+ */
+
+public class HomeModel extends BaseModel {
+	
+
+	ProfileDatabase profileDB;
+	Document[] documents = null;
+	Profile[] observers = null;
+	Profile[] observing = null;
+	
+	
+	//Stores the session object, gets the database connection.
+	
+	public HomeModel(Session s) {
+		theSession = s;
+		profileDB = new ProfileDatabase(s.getConnection());
+	}
+
+	public ProfileDatabase getProfileDatabase() {
+		return profileDB;
+	}
+
+	//addUserDocument - Creates a new blank document object and inserts it into the database.
+	
+	public void addUserDocument() {
+			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = new Date();
+			Document doc = new Document("");
+			doc.setTitle("New Post");
+			doc.setAuthor(theSession.getUser());
+			doc.setImageLocation("\\default\\docs\\image\\1.png");
+			doc.setTextLocation("\\default\\docs\\text\\1.txt");
+			doc.setLastUpdated(formatter.format(date));
+			profileDB.addNewDocument(doc);
+			theSession.getUser().addDocument(doc);
+	}
+	
+	
+	//removeDocument - deletes a document record from the database at a specific document id.
+	
+	public void removeDocument(Document doc) {
+		profileDB.removeDocument(doc.getID());
+	}
+	
+	public void removeDocument(int id) {
+		profileDB.removeDocument(id);
+	}
+	
+	//addUserDocument - Creates a new blank document and assigns the input user as the author.
+	
+	public void addUserDocument(Profile user) {
+		Document doc = new Document("");
+		doc.setTitle("New Post");
+		doc.setAuthor(user);
+		profileDB.addNewDocument(doc);
+		user.addDocument(doc);
+	}
+	
+	
+	//getUserDocuments - returns an array of documents which are created by the active user.
+	
+	public Document[] getUserDocuments() {
+			
+			Profile user = theSession.getUser();
+			user.setDocuments(profileDB.getUserDocuments(user));
+			ArrayList<Document> docList = user.getDocuments();
+			Document[] docArr = new Document[docList.size()];
+			
+			for(int i = 0; i < docArr.length; i++) {
+				docArr[i] = docList.get(i);
+			}
+			
+			documents = docArr;
+
+		return documents;
+	}
+	
+	
+
+	//getDocList - returns a list of documents which are created by the specified user.
+	
+	public ArrayList<Document> getDocList(Profile user) {
+		
+		user.setDocuments(profileDB.getUserDocuments(user));
+		ArrayList<Document> docList = user.getDocuments();
+		for(Document doc : docList) {
+			addAuthor(doc);
+		}
+		return docList;
+	}
+	
+	//getObserving - returns all profiles the active user is observing as an array.
+	
+	public Profile[] getObserving() {
+		
+		ArrayList<Profile> users = getObservingList();
+		
+		Profile[] profArr = new Profile[users.size()];
+		
+		for(int i = 0; i < profArr.length; i++) {
+			profArr[i] = users.get(i);
+		}
+		
+		return profArr;
+	}
+	
+	//getObservers - returns all profiles that are observing the active user as an array.
+	
+	public Profile[] getObservers() {
+		
+		ArrayList<Profile> users = getObserverList();
+		
+		Profile[] profArr = new Profile[users.size()];
+		
+		for(int i = 0; i < profArr.length; i++) {
+			profArr[i] = users.get(i);
+		}
+		
+		return profArr;
+	}
+	
+	//getDocument - Gets the document at a specific id, if the document exists.
+	
+	public Document getDocument(int id) {
+		return profileDB.getDocument(id);
+	}
+	
+	//getUser - Gets the profile at a specific id, if the user exists.
+	
+	public Profile getUser(int id) {
+		
+		return profileDB.getUser(id);
+	}
+	
+	
+	//getObservingList - returns all profiles that the active user is observing as a list.
+
+	public ArrayList<Profile> getObservingList() {
+		
+		Profile user = theSession.getUser();
+	
+		user.setObservingList(profileDB.getObserving(user));
+		
+		return user.getObservingList();
+
+	}
+	
+	//getObserverList - returns all profiles that are observing the active user as a list.
+	
+	public ArrayList<Profile> getObserverList() {
+		
+		Profile user = theSession.getUser();
+	
+		user.setObservers(profileDB.getObservers(user));
+		
+		return user.getObservers();
+
+	}
+	
+
+	//getSuggestions - returns all suggestions associated with a profile in order of similarity
+	//only returns the suggestions within the range specified.
+	
+	public ArrayList<Document> getSuggestions(Profile user, int position, int range){
+		
+		Comparator<Document> c = new Comparator<Document>() {
+		    public int compare(Document a, Document b) {
+		    	  if (a.getSimilarity() > b.getSimilarity()) return -1;
+		          if (a.getSimilarity() < b.getSimilarity() ) return 1;
+		          return 0;
+		    };
+		};
+		
+		VectorSpaceModel vsm = theSession.getSocket().getVSM();
+		CosineSimilarity cosine = new CosineSimilarity(vsm);
+		cosine.setProfile(user);
+		ArrayList<Document> allDocuments = profileDB.getAllDocuments();
+		ArrayList<Document> similarDocs = new ArrayList<Document>();
+		ArrayList<Document> userDocs = profileDB.getUserDocuments(user);
+		double similarity;
+		int index;
+		
+		for(Document doc : allDocuments) {
+			
+			index = Collections.binarySearch(userDocs, doc);
+					
+			if(index < 0) {
+				similarity = cosine.equateProfile(doc);
+				if(similarity > 0) {
+					doc.setSimilarity(similarity);
+					similarDocs.add(doc);
+				}
+			} 
+		}
+		
+		Collections.sort(similarDocs, c);
+		
+		if(similarDocs.size() < range) {
+			range = similarDocs.size();
+		}
+		
+		if(similarDocs.size() < position) {
+			return null;
+		}
+		
+		List<Document> splitList = similarDocs.subList(position, range);
+		
+		ArrayList<Document> results = new ArrayList<Document>();
+		
+		results.addAll(splitList);
+		
+		for(Document doc : results) {
+			addAuthor(doc);
+		}
+	
+		return results;
+	}
+
+	
+	//getViewedObserving - gets the profiles of the user being viewed is observing as a list.
+	
+	public ArrayList<Profile> getViewedObserving(Profile user){
+		
+		user.setObservingList(profileDB.getObserving(user));
+		
+		return user.getObservingList();
+	}
+	
+	
+	//getViewedObservers - gets the profiles of users that are observing the user being viewed as a list.
+	
+	public ArrayList<Profile> getViewedObservers(Profile user){
+		
+		user.setObservers(profileDB.getObservers(user));
+		
+		return user.getObservers();
+	}
+	
+	//addUserLinks - gets all users associated with the input user, 
+	//adds them to the profile object.
+	
+	public Profile addUserLinks(Profile user) {
+		return profileDB.addUserLinks(user);
+	}
+	
+	//addAuthor - 	Retrieves the author for a specific document,
+	//adds it to the document object.
+	
+	public void addAuthor(Document doc) {
+		doc.setAuthor(profileDB.getAuthor(doc));
+	}
+	
+	public ArrayList<Document> getRecentList(Profile user){
+		String sql = "SELECT UserID FROM OBSERVE_Table WHERE ObserverID=" + user.getUserID();
+		ResultSet rs = profileDB.queryDatabase(sql);
+		ArrayList<Profile> users = new ArrayList<Profile>();
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		ArrayList<Document> documents = new ArrayList<Document>();
+		
+		Comparator<Document> c = new Comparator<Document>() {
+			
+			SimpleDateFormat format=  new SimpleDateFormat("dd/MM/yyyy");
+			
+		    public int compare(Document a, Document b) {
+		    		try {
+						Date dateA = format.parse(a.getLastUpdated());
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+		    	  if (a.getSimilarity() > b.getSimilarity()) return -1;
+		          if (a.getSimilarity() < b.getSimilarity() ) return 1;
+		          return 0;
+		    };
+		};
+		
+		try {
+			while(rs.next()) {
+				ids.add(rs.getInt(1));
+			} 
+			for(int id : ids) {
+				users.add(profileDB.getUser(id));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		for(Profile u : users) {
+			documents.addAll(profileDB.getUserDocuments(u));
+		}
+		
+	}
+	
+
+}

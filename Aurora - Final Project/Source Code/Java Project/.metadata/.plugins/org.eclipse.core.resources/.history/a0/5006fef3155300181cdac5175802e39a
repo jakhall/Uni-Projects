@@ -1,0 +1,13 @@
+package aurora.model;
+
+import aurora.retrieval.VectorSpaceModel;
+
+public class VSMHandler {
+	
+	VectorSpaceModel vsm;
+	
+	VSMHandler(){
+		vsm = new VectorSpaceModel();
+	}
+	
+}

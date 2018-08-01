@@ -1,0 +1,105 @@
+package aurora.view;
+
+import java.awt.Dimension;
+
+import aurora.controller.ManageController;
+import javax.swing.JScrollPane;
+import javax.swing.SpringLayout;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class ManagePanel extends MainPanel {
+	
+	protected ManageController theController;
+	
+	private JScrollPane observingScroll;
+	private JLabel lblObserving;
+	private JList observingList;
+	private JButton btnView;
+	private JButton btnDelete;
+	
+	public ManagePanel(ManageController manageController) {
+		super(manageController);
+		theController = manageController;
+		
+		setupPanel();
+		setupData();
+		setupListeners();
+	}
+	
+	//setupPanel - adds all the visual elements, defines their properties.
+	
+	protected void setupPanel() {
+		super.setupPanel();
+		this.setPreferredSize(new Dimension(500, 600));
+		
+		SpringLayout springLayout = (SpringLayout) contentPanel.getLayout();
+		
+		observingScroll = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.NORTH, observingScroll, 78, SpringLayout.NORTH, contentPanel);
+		springLayout.putConstraint(SpringLayout.WEST, observingScroll, 103, SpringLayout.WEST, contentPanel);
+		springLayout.putConstraint(SpringLayout.EAST, observingScroll, -108, SpringLayout.EAST, contentPanel);
+		contentPanel.add(observingScroll);
+		
+		lblObserving = new JLabel("People I'm observing: ");
+		springLayout.putConstraint(SpringLayout.WEST, lblObserving, 103, SpringLayout.WEST, contentPanel);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblObserving, -10, SpringLayout.NORTH, observingScroll);
+		
+		observingList = new JList();
+		observingScroll.setViewportView(observingList);
+		contentPanel.add(lblObserving);
+		
+		btnView = new JButton("View Profile");
+		springLayout.putConstraint(SpringLayout.NORTH, btnView, 376, SpringLayout.NORTH, contentPanel);
+		springLayout.putConstraint(SpringLayout.SOUTH, observingScroll, -16, SpringLayout.NORTH, btnView);
+		springLayout.putConstraint(SpringLayout.WEST, btnView, 103, SpringLayout.WEST, contentPanel);
+		springLayout.putConstraint(SpringLayout.EAST, btnView, -210, SpringLayout.EAST, contentPanel);
+		contentPanel.add(btnView);
+		
+		btnDelete = new JButton("Delete");
+		springLayout.putConstraint(SpringLayout.NORTH, btnDelete, 16, SpringLayout.SOUTH, observingScroll);
+		springLayout.putConstraint(SpringLayout.WEST, btnDelete, 6, SpringLayout.EAST, btnView);
+		springLayout.putConstraint(SpringLayout.EAST, btnDelete, -110, SpringLayout.EAST, contentPanel);
+		contentPanel.add(btnDelete);
+	}
+	
+	//setupData - adds all the necessary data retrieved from the controller.
+	
+	public void setupData() {
+		super.setupData();
+		updateObserverList();
+		updateObserverNum();
+	}
+	
+	private void updateObserverList() {
+		String[] observing = theController.getObservingUsername();
+		observingList.setListData(observing);
+	}
+	
+	private void updateObserverNum() {
+		lblObserving.setText("People I'm Observing: (" + theController.getNumOfObservers() + ")");
+	}
+	
+	protected void setupListeners() {
+		super.setupListeners();
+		
+		btnView.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent click) {
+				int id = observingList.getSelectedIndex();
+				theController.viewObserving(id);
+			}
+		});
+		
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent click) {
+				int id = observingList.getSelectedIndex();
+				theController.deleteObserving(id);
+				updateObserverList();
+				updateObserverNum();
+			}
+		});
+	}
+}
