@@ -1,0 +1,175 @@
+package aurora.view;
+
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
+import aurora.controller.BaseController;
+import aurora.controller.HomeController;
+import aurora.controller.LoginController;
+import aurora.model.LoginModel;
+import aurora.model.Session;
+
+import java.awt.Dimension;
+import java.awt.Font;
+
+public class LoginPanel extends BasePanel {
+	
+	protected LoginController theController;
+	private JLabel usernameLabel;
+	private JLabel passwordLabel;
+	
+	private JLabel label;
+	private JLabel lblWelcomeToAurora;
+	private JTextField usernameField;
+	private JPasswordField passwordField;
+	private JButton btnRegister;
+	private JButton loginBtn;
+	private JButton btnGuide;
+	
+	
+	
+	public LoginPanel(LoginController loginController) {
+		super(loginController);
+		theController = loginController;
+
+		setupPanel();
+		setupListeners();
+	}
+	
+
+	//setupPanel - adds all the visual elements, defines their properties.
+	
+	public void setupPanel() {
+		this.setPreferredSize(new Dimension(500, 300));
+		
+		this.setLayout(baseLayout);
+		
+		SpringLayout springLayout = new SpringLayout();
+		setLayout(springLayout);
+		
+		usernameLabel = new JLabel("Username: ");
+		springLayout.putConstraint(SpringLayout.NORTH, usernameLabel, 87, SpringLayout.NORTH, this);
+		usernameLabel.setLocation(192, 100);
+		usernameLabel.setSize(100, 20);
+		usernameLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+		passwordLabel = new JLabel("Password: ");
+		springLayout.putConstraint(SpringLayout.WEST, passwordLabel, 0, SpringLayout.WEST, usernameLabel);
+		passwordLabel.setLocation(192, 133);
+		passwordLabel.setSize(100, 20);
+		passwordLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+
+		
+		this.add(usernameLabel);
+		this.add(passwordLabel);
+	
+		
+		usernameField = new JTextField();
+		springLayout.putConstraint(SpringLayout.WEST, usernameField, 292, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.EAST, usernameLabel, -3, SpringLayout.WEST, usernameField);
+		springLayout.putConstraint(SpringLayout.NORTH, usernameField, -3, SpringLayout.NORTH, usernameLabel);
+		springLayout.putConstraint(SpringLayout.EAST, usernameField, -73, SpringLayout.EAST, this);
+		usernameField.setBounds(304, 99, 135, 22);
+		add(usernameField);
+		usernameField.setColumns(10);
+		
+		passwordField = new JPasswordField();
+		springLayout.putConstraint(SpringLayout.WEST, passwordField, 6, SpringLayout.EAST, passwordLabel);
+		springLayout.putConstraint(SpringLayout.EAST, passwordField, -73, SpringLayout.EAST, this);
+		springLayout.putConstraint(SpringLayout.NORTH, passwordLabel, 3, SpringLayout.NORTH, passwordField);
+		springLayout.putConstraint(SpringLayout.NORTH, passwordField, 6, SpringLayout.SOUTH, usernameField);
+		passwordField.setBounds(304, 132, 135, 22);
+		add(passwordField);
+		passwordField.setColumns(10);
+		baseLayout.putConstraint(SpringLayout.NORTH, passwordField, 16, SpringLayout.SOUTH, usernameField);
+		baseLayout.putConstraint(SpringLayout.NORTH, usernameLabel, 93, SpringLayout.NORTH, this);
+		baseLayout.putConstraint(SpringLayout.WEST, usernameField, 0, SpringLayout.WEST, passwordField);
+		baseLayout.putConstraint(SpringLayout.NORTH, passwordLabel, 22, SpringLayout.SOUTH, usernameLabel);
+		baseLayout.putConstraint(SpringLayout.WEST, passwordField, 294, SpringLayout.WEST, this);
+		baseLayout.putConstraint(SpringLayout.WEST, passwordLabel, 0, SpringLayout.WEST, usernameLabel);
+		baseLayout.putConstraint(SpringLayout.NORTH, usernameField, 90, SpringLayout.NORTH, this);
+		baseLayout.putConstraint(SpringLayout.EAST, usernameField, -56, SpringLayout.EAST, this);
+		baseLayout.putConstraint(SpringLayout.EAST, passwordField, -56, SpringLayout.EAST, this);
+		
+		label = new JLabel("");
+		label.setHorizontalAlignment(SwingConstants.LEFT);
+		springLayout.putConstraint(SpringLayout.NORTH, label, 26, SpringLayout.NORTH, this);
+		springLayout.putConstraint(SpringLayout.WEST, label, 33, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.EAST, label, -6, SpringLayout.WEST, usernameLabel);
+		label.setLocation(41, 52);
+		label.setSize(159, 133);
+		baseLayout.putConstraint(SpringLayout.EAST, label, -300, SpringLayout.EAST, this);
+		baseLayout.putConstraint(SpringLayout.WEST, usernameLabel, 24, SpringLayout.EAST, label);
+		ImageIcon imageIcon = new ImageIcon(new ImageIcon(LoginPanel.class.getResource("/default_data/profile_image/aurora_shadow.png")).getImage().getScaledInstance(150, 125, Image.SCALE_DEFAULT));
+		label.setIcon(new ImageIcon(imageIcon));
+		add(label);
+		
+		lblWelcomeToAurora = new JLabel("Welcome to Aurora");
+		springLayout.putConstraint(SpringLayout.NORTH, lblWelcomeToAurora, 6, SpringLayout.SOUTH, label);
+		springLayout.putConstraint(SpringLayout.WEST, lblWelcomeToAurora, 0, SpringLayout.WEST, label);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblWelcomeToAurora, -68, SpringLayout.SOUTH, this);
+		springLayout.putConstraint(SpringLayout.EAST, lblWelcomeToAurora, -20, SpringLayout.EAST, label);
+		lblWelcomeToAurora.setLocation(51, 182);
+		lblWelcomeToAurora.setSize(135, 33);
+		lblWelcomeToAurora.setHorizontalAlignment(SwingConstants.CENTER);
+		baseLayout.putConstraint(SpringLayout.SOUTH, label, -12, SpringLayout.NORTH, lblWelcomeToAurora);
+		baseLayout.putConstraint(SpringLayout.EAST, lblWelcomeToAurora, 0, SpringLayout.EAST, label);
+		baseLayout.putConstraint(SpringLayout.WEST, lblWelcomeToAurora, 0, SpringLayout.WEST, label);
+		add(lblWelcomeToAurora);
+		
+		btnRegister = new JButton("Register");
+		btnRegister.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		springLayout.putConstraint(SpringLayout.SOUTH, btnRegister, -10, SpringLayout.SOUTH, this);
+		springLayout.putConstraint(SpringLayout.EAST, btnRegister, -10, SpringLayout.EAST, this);
+		add(btnRegister);
+		
+		loginBtn = new JButton("Login");
+		springLayout.putConstraint(SpringLayout.NORTH, loginBtn, 12, SpringLayout.SOUTH, passwordField);
+		springLayout.putConstraint(SpringLayout.WEST, loginBtn, 76, SpringLayout.EAST, label);
+		springLayout.putConstraint(SpringLayout.EAST, loginBtn, 0, SpringLayout.EAST, usernameField);
+		loginBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		add(loginBtn);
+		
+		btnGuide = new JButton("Guide");
+		springLayout.putConstraint(SpringLayout.SOUTH, label, -74, SpringLayout.NORTH, btnGuide);
+		springLayout.putConstraint(SpringLayout.NORTH, btnGuide, 0, SpringLayout.NORTH, btnRegister);
+		springLayout.putConstraint(SpringLayout.WEST, btnGuide, 10, SpringLayout.WEST, this);
+		btnGuide.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		add(btnGuide);
+		
+	}
+	
+	
+	//setupListeners - adds listeners to all of the necessary fields and buttons.
+	
+	protected void setupListeners() {
+		
+		loginBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent click) {
+				Session session = theController.validateUser(usernameField.getText(), passwordField.getText());
+				if(session != null) {
+					theController.login();
+				} else {
+					System.out.println("Username or password incorrect");
+				}
+			}
+		});
+		
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent click) {
+				theController.register();
+			}
+		});
+		
+		btnGuide.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent click) {
+				theController.viewGuide();
+			}
+		});
+		
+	}
+}

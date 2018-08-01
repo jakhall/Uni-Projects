@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="Source Code/Android Project/app/build/generated/source/buildConfig/androidTest/debug"/>
+	<classpathentry kind="src" path="Source Code/Android Project/app/build/generated/source/buildConfig/debug"/>
+	<classpathentry kind="src" path="Source Code/Android Project/app/build/generated/source/r/androidTest/debug"/>
+	<classpathentry kind="src" path="Source Code/Android Project/app/build/generated/source/r/debug"/>
+	<classpathentry kind="src" path="Source Code/Android Project/app/src/androidTest/java"/>
+	<classpathentry kind="src" path="Source Code/Android Project/app/src/main/java"/>
+	<classpathentry kind="src" path="Source Code/Android Project/app/src/test/java"/>
+	<classpathentry kind="src" path="Source Code/Java Project/Aurora/src"/>
+	<classpathentry kind="lib" path="Applications/Aurora - Desktop + Server/Aurora_Desktop.jar"/>
+	<classpathentry kind="lib" path="Applications/Aurora - Desktop + Server/Aurora_Server.jar"/>
+	<classpathentry kind="lib" path="Applications/Aurora - Desktop + Server/externals/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="Applications/Aurora - Desktop + Server/externals/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="Applications/Aurora - Desktop + Server/externals/sqlite-jdbc-3.21.0.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support.test.espresso/espresso-core/2.2.2/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support.test.espresso/espresso-idling-resource/2.2.2/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support.test/exposed-instrumentation-api-publish/0.5/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support.test/rules/0.5/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support.test/runner/0.5/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/design/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/exploded-aar/com.android.support/transition/25.2.0/jars/classes.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/build/generated/mockable-android-25.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/externals/lipermi-0.4.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="lib" path="Source Code/Android Project/lipermi-0.4/lipermi-0.4.jar"/>
+	<classpathentry kind="lib" path="Source Code/Java Project/Aurora/externals/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="Source Code/Java Project/Aurora/externals/commons-io-2.6.jar"/>
+	<classpathentry kind="lib" path="Source Code/Java Project/Aurora/externals/lipermi-0.4.jar"/>
+	<classpathentry kind="lib" path="Source Code/Java Project/Aurora/externals/sqlite-jdbc-3.21.0.jar"/>
+	<classpathentry kind="lib" path="Source Code/Java Project/Aurora/jgoodies-forms-1.8.0-sources.jar"/>
+	<classpathentry kind="lib" path="Source Code/Java Project/Aurora/jgoodies-forms-1.8.0.jar"/>
+	<classpathentry kind="output" path="Source Code/Android Project/app/build/intermediates/classes/debug"/>
+</classpath>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="aurora.main.HomeActivity"
+    android:fitsSystemWindows="true"
+    android:theme="@style/AppTheme.NoActionBar">
+
+    <include layout="@layout/toolbar_layout"
+        android:id="@+id/include" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/suggestionScroll"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="11dp"
+            android:background="@drawable/black_border"
+            android:padding="2dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/suggestionRecycler" />
+        </ScrollView>
+
+        <Button
+            android:text="Documents"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnViewDocuments"
+            android:textSize="10sp"
+            android:layout_above="@+id/btnViewUsers"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="-5dp" />
+
+        <Button
+            android:text="View Users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnViewUsers"
+            android:textSize="10sp"
+            android:layout_alignBaseline="@+id/btnViewDetails"
+            android:layout_alignBottom="@+id/btnViewDetails"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:layout_height="100dp"
+            app:srcCompat="@mipmap/ic_launcher"
+            android:id="@+id/profileIcon"
+            android:layout_width="100dp"
+            android:layout_marginBottom="29dp"
+            android:background="@drawable/black_border"
+            android:layout_above="@+id/documentScroll"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:padding="2dp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:id="@+id/documentScroll"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/black_border"
+            android:padding="2dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/documentRecycler" />
+        </ScrollView>
+
+        <TextView
+            android:text="Recent Posts:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/documentScroll"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/lblDocuments"
+            android:textAppearance="@style/TextAppearance.AppCompat" />
+
+        <TextView
+            android:text="Suggestions:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/suggestionScroll"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/lblSuggestions"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:layout_marginBottom="5dp" />
+
+        <Button
+            android:text="Details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnViewDetails"
+            android:textSize="10sp"
+            android:layout_alignBottom="@+id/profileIcon"
+            android:layout_alignLeft="@+id/fldUsername"
+            android:layout_alignStart="@+id/fldUsername"
+            android:layout_marginLeft="-5dp" />
+
+        <TextView
+            android:text="Full name "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lblName"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="16sp"
+            android:layout_marginLeft="12dp"
+            android:layout_alignTop="@+id/btnViewDocuments"
+            android:layout_toRightOf="@+id/profileIcon"
+            android:layout_toEndOf="@+id/profileIcon"
+            android:layout_marginStart="12dp" />
+
+        <TextView
+            android:text="username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fldUsername"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textSize="12sp"
+            android:layout_below="@+id/lblName"
+            android:layout_alignLeft="@+id/lblName"
+            android:layout_alignStart="@+id/lblName"
+            android:textColor="?attr/colorControlNormal" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

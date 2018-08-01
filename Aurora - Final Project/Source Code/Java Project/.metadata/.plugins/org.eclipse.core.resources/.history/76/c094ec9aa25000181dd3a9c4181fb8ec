@@ -1,0 +1,180 @@
+package aurora.retrieval;
+
+import java.util.ArrayList;
+import aurora.model.Document;
+import aurora.model.DocumentWord;
+import aurora.model.Profile;
+import aurora.retrieval.Vector;
+
+/**
+ * 
+ * Cosine Similarity - Used to compare the similarity between two vector within the system.
+ *
+ */
+
+
+public class CosineSimilarity {
+	
+	private double dotProduct;
+	private double vector1Norm;
+	private double vector2Norm;
+	private double similarity;
+	
+	private Vector queryVector;
+	private Vector userVector;
+	private Vector vector1;
+	private Vector vector2;
+	private VectorSpaceModel vsm;
+	
+	
+	
+	//Stores the vector space model.
+	
+	public CosineSimilarity(VectorSpaceModel vsm) {
+		this.vsm = vsm;
+	}
+	
+	//Equate - converts a document and query string into vectors
+	//compares the two vectors using cosine similarity.
+	
+	public double equate(Document d, String q){
+		
+		
+		vector1 = new Vector(vsm.getDocumentVector(d));
+		vector2 = new Vector(vsm.getQueryVector(q));
+	
+		vector1Norm = vector1.norm();
+		vector2Norm = vector2.norm();
+
+		dotProduct = vector1.dotProduct(vector2);
+
+
+		similarity =  dotProduct/(vector1Norm*vector2Norm);
+		
+		return similarity;
+		
+	}
+	
+	//equateProfile - converts a profile and document into vectors
+	//compares the two vectors using cosine similarity.
+	
+	public double equateProfile(Document d) {
+
+		Vector v1 = new Vector(vsm.getDocumentVector(d));
+		Vector v2 = userVector;
+		
+		dotProduct = v1.dotProduct(v2);
+
+		similarity =  dotProduct/(v1.norm()*v2.norm());
+		
+		return similarity;
+		
+	}
+	
+	//setProfile - sets the profile vector to compare to.
+	
+	public void setProfile(Profile u) {
+		userVector = new Vector(vsm.getProfileVector(u));
+	}
+	
+	//getWeights - returns the array of weights associated with the document vector.
+	public double[] getWeights(Document doc){
+		
+		return vsm.getDocumentVector(doc);
+		
+	}
+	
+	public double[] getWeights(String query){
+		
+		 double[] weights = vsm.getQueryVector(query);
+		
+		return weights;
+		
+	}
+	
+	public double equate(Document d, Document d2){
+		
+		vector1 = createVector(d2.getVSM());
+		vector2 = createVector(d.getVSM());
+		
+		dotProduct = vector1.dotProduct(vector2);
+		vector1Norm = vector1.norm();
+		vector2Norm = vector2.norm();
+
+		similarity =  dotProduct/(vector1Norm*vector2Norm);
+		
+		return similarity;
+		
+	}
+	
+	
+	public double equate(Profile p, Document d){
+		
+		vector1 = createVector(p.getVSM());
+		vector2 = createVector(d.getVSM());
+		
+		dotProduct = vector1.dotProduct(vector2);
+		vector1Norm = vector1.norm();
+		vector2Norm = vector2.norm();
+
+		similarity =  dotProduct/(vector1Norm*vector2Norm);
+		
+		return similarity;
+		
+	}
+	
+	public void setQuery(String query) {
+		queryVector = new Vector(vsm.getQueryVector(query));
+	}
+	
+	
+	public double equate(Document d) {
+
+		Vector v1 = new Vector(vsm.getDocumentVector(d));
+		Vector v2 = queryVector;
+
+		dotProduct = v1.dotProduct(v2);
+
+		similarity =  dotProduct/(v1.norm()*v2.norm());
+		
+		return similarity;
+		
+	}
+	
+	
+	
+
+	private Vector createVector(double[] weights) {
+		Vector vector = new Vector();
+		vector.addWeights(weights);
+		return vector;
+	}
+	
+	
+	private Vector createVector(ArrayList<DocumentWord> w){
+		Vector vector;
+		vector = new Vector();
+		vector.addWeights(w);
+		return vector;
+	}
+	
+	
+	public double getVector1Norm(){
+		return vector1Norm;
+	}
+	
+	public double getVector2Norm(){
+		return vector2Norm;
+	}
+	
+	public double getDotProduct(){
+		return dotProduct;
+	}
+	
+	public double getSimilarity(){
+		return similarity;
+	}
+	
+	
+
+}

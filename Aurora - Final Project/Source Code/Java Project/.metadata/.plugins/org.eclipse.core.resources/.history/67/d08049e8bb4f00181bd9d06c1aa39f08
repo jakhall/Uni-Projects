@@ -1,0 +1,88 @@
+package aurora.controller;
+
+import aurora.model.Document;
+import aurora.model.ManageModel;
+import aurora.model.Profile;
+import aurora.model.Session;
+import aurora.view.BasePanel;
+import aurora.view.ProfilePanel;
+
+/**
+ * 
+ * Manage Controller - controls the manage view, allows the user to view the profiles they are observing
+ * and delete them if required.
+ * 
+ */
+
+public class ManageController extends BaseController {
+
+		private ManageModel theModel;
+		private Document theDocument;
+		private int observerNum;
+	
+		
+		//Stores the session object, creates a new manage model. 
+		
+		public ManageController(Session s) {
+			theSession = s;
+			theModel = new ManageModel(s);	
+		}
+		
+		public Session getSession() {
+			return theSession;
+		}
+	
+		
+		//deleteObserver - removes the link between the active user and the user observing them.
+		
+		public void deleteObserver(int id) {
+			if(id >= 0) {
+				Profile user = theModel.getObservers()[id];
+				theModel.removeObserver(user);
+			}
+		}
+		
+		//deleteObserving - removes the link between the active user and the user they are observing.
+		
+		public void deleteObserving(int id) {
+			if(id >= 0) {
+			Profile user = theModel.getObserving()[id];
+			theModel.removeObserving(user);
+			}
+		}
+		
+		
+		
+		//getObservingUsername - returns a list of all the username's of profiles which the current user is observing.
+		
+		public String[] getObservingUsername() {
+			Profile[] profArr = theModel.getObserving();
+			observerNum = profArr.length;
+			String[] strArr = new String[observerNum];
+			for(int i = 0; i < observerNum; i++) {
+				strArr[i] = profArr[i].getUsername();
+			}
+			return strArr;
+		}
+		
+		
+		//viewObserving - gets the profile at the observing list index, adds the users to the selected profile,
+		//creates a new profile controller with that user and sets it to the active content pane. 
+		
+		public void viewObserving(int index) {
+			if(index >= 0) {
+				Profile profile = theModel.getObserving()[index];
+				theModel.addUserLinks(profile);
+				ProfileController pc = new ProfileController(theSession, profile);
+				pc.setPreviousPanel((BasePanel) theFrame.getContentPane());
+				pc.setFrame(theFrame);
+				ProfilePanel pp = new ProfilePanel(pc);
+				theFrame.setContentPane(pp);
+				theFrame.pack();
+			}
+		}
+		
+		public int getNumOfObservers() {
+			return observerNum;
+		}
+}

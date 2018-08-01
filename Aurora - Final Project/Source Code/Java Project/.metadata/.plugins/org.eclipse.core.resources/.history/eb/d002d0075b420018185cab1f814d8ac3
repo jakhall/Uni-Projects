@@ -1,0 +1,25 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+public class AuroraClient {
+	AuroraClient(){
+		
+	}
+	
+	public void communicate() throws UnknownHostException, IOException {
+		Socket socket = new Socket("localHost", 4017);
+		ObjectOutputStream objectOut = new ObjectOutputStream(socket.getOutputStream());
+		TestController test = new TestController("Red");
+		System.out.println("Test set to: " + test.getColor());
+		objectOut.writeObject(test);
+		test.setColor("Green");
+		System.out.println("Test set to: " + test.getColor());
+		objectOut.flush();
+		objectOut.close();
+		socket.close();
+	}
+}

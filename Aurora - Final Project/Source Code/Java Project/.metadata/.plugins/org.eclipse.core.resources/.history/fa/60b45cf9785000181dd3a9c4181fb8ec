@@ -1,0 +1,161 @@
+package aurora.model;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import aurora.retrieval.CosineSimilarity;
+import aurora.retrieval.Term;
+import aurora.retrieval.VectorSpaceModel;
+
+/**
+ * 
+ * Search Model - The model for the search views of the system, interacts with the 
+ * database and vector space model.
+ *
+ */
+
+
+public class SearchModel extends BaseModel {
+	
+
+	ProfileDatabase profileDB;
+	Document[] documents = null;
+	Profile[] observers = null;
+	Profile[] observing = null;
+	
+	//Stores the session object, gets the database connection.
+	
+	public SearchModel(Session s) {
+		theSession = s;
+		profileDB = new ProfileDatabase(s.getConnection());
+	}
+
+	public ProfileDatabase getProfileDatabase() {
+		return profileDB;
+	}
+
+	public void addUserDocument() {
+			Document doc = new Document("");
+			doc.setTitle("New Post");
+			doc.setAuthor(theSession.getUser());
+			profileDB.addNewDocument(doc);
+			theSession.getUser().addDocument(doc);
+	}
+	
+	public void removeObserver(Profile user) {
+		int userId = theSession.getUser().getUserID();
+		int observerId = user.getUserID();
+		String sql = "DELETE FROM OBSERVER_Table WHERE ObserverID=" + observerId + " AND UserID=" + userId;
+		profileDB.updateDatabase(sql);
+	}
+	
+	
+	public void removeObserving(Profile user) {
+		int observerId = theSession.getUser().getUserID();
+		int userId = user.getUserID();
+		String sql = "DELETE FROM OBSERVER_Table WHERE ObserverID=" + observerId + " AND UserID=" + userId;
+		profileDB.updateDatabase(sql);
+	}
+	
+	
+	public void removeDocument(Document doc) {
+		profileDB.removeDocument(doc.getID());
+	}
+	
+	
+	public Document[] getDocuments() {
+		
+		Profile user = theSession.getUser();
+		
+		user.setDocuments(profileDB.getUserDocuments(user));
+		
+		Document[] profArr = new Document[user.getDocuments().size()];
+		
+		for(int i = 0; i < profArr.length; i++) {
+			profArr[i] = user.getDocuments().get(i);
+		}
+		
+		return profArr;
+	}
+
+	
+	public Profile getUser(int id) {	
+		return profileDB.getUser(id);
+	}
+	
+	public ArrayList<Document> getDocumentResults(String query, int position, int range){
+		
+		Comparator<Document> c = new Comparator<Document>() {
+		    public int compare(Document a, Document b) {
+		    	  if (a.getSimilarity() > b.getSimilarity()) return -1;
+		          if (a.getSimilarity() < b.getSimilarity() ) return 1;
+		          return 0;
+		    };
+		};
+		
+		VectorSpaceModel vsm = theSession.getSocket().getVSM();
+		CosineSimilarity cosine = new CosineSimilarity(vsm);
+		cosine.setQuery(query);
+		ArrayList<Document> allDocuments = profileDB.getAllDocuments();
+		ArrayList<Document> similarDocs = new ArrayList<Document>();
+		double similarity;
+		for(Document doc : allDocuments) {
+			similarity = cosine.equate(doc);
+			if(similarity > 0) {
+				doc.setSimilarity(similarity);
+				similarDocs.add(doc);
+			}
+		}
+		
+		Collections.sort(similarDocs, c);
+		
+		if(similarDocs.size() < range) {
+			range = similarDocs.size();
+		}
+		
+		if(similarDocs.size() < position) {
+			return null;
+		}
+		
+		List<Document> splitList = similarDocs.subList(position, range);
+		
+		ArrayList<Document> results = new ArrayList<Document>();
+		
+		results.addAll(splitList);
+	
+		return results;
+	}
+	
+	
+	public Document getDocument(int id) {
+		return profileDB.getDocument(id);
+	}
+	
+	
+	public ArrayList<Profile> getUserResults(String query) {
+		
+		String sql = "SELECT * FROM USER_Table WHERE Username LIKE '" + query + "%'";
+	
+		ResultSet rs = profileDB.queryDatabase(sql);
+		
+		return profileDB.createProfiles(rs);
+		
+	}
+
+	
+	
+	public Profile addUserLinks(Profile user) {
+		return profileDB.addUserLinks(user);
+	}
+	
+	public void addAuthor(Document doc) {
+		doc.setAuthor(profileDB.getAuthor(doc));
+	}
+	
+
+}

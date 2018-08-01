@@ -1,0 +1,74 @@
+package aurora.model;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+/**
+ * 
+ * Login Model - The model for the home views of the system, interacts with the 
+ * database and vector space model.
+ *
+ */
+
+
+public class LoginModel extends BaseModel {
+
+
+	Statement stmt = null;
+	String sql;
+	ResultSet rs;
+	ProfileDatabase profileDB;
+	
+	public LoginModel() {
+		
+		try {
+			createConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		profileDB = new ProfileDatabase(conn);
+		
+	}
+
+	public LoginModel(Session s) {
+		profileDB = new ProfileDatabase(s.getConnection());
+		conn = s.getConnection();
+	}
+	
+	
+	public void createConnection() throws SQLException {
+		
+		conn = DBConnection.dbConnector();
+		
+		stmt = conn.createStatement();
+		
+	}
+	
+	
+	public Session validateLogin(String u, String p) {
+		
+		Profile user = profileDB.getLogin(u, p);
+		
+		if(user != null) {
+			return login(user);
+		}
+		
+		return null;
+		
+	}
+	
+	public Session login(Profile p) {
+		profileDB.addUserLinks(p);
+		theSession = new Session(p, conn);
+		return theSession;
+	}
+	
+	
+	public ProfileDatabase getprofileDatabase() {
+		return profileDB;
+	}
+	
+
+}

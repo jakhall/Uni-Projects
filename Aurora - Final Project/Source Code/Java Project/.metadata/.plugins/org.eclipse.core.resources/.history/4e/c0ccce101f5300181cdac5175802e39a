@@ -1,0 +1,113 @@
+package aurora.remote;
+
+import java.util.ArrayList;
+import aurora.model.LoginModel;
+import aurora.model.Session;
+import aurora.network.Request;
+import aurora.network.Response;
+import aurora.network.SocketController;
+
+/**
+ * 
+ * Login Invoker - Handles tasks requested by the clients login view.
+ *
+ */
+
+public class LoginInvoker extends BaseInvoker {
+	
+	private LoginModel theModel;
+	private SocketController theSocket;
+	
+	
+	//creates a new login model.
+	
+	public LoginInvoker() {
+		super();
+		theModel = new LoginModel();	
+	}
+	
+	
+	//Stores the client socket and creates a new login model.
+	
+	public LoginInvoker(SocketController socket) {
+		super(socket);
+		theModel = new LoginModel();
+		theSocket = socket;
+	}
+	
+	//Stores the session, socket and creates a new login model.
+
+	public LoginInvoker(Session s) {
+		super(s);
+		theSession = s;
+		theSocket = s.getSocket();
+		theModel = new LoginModel(s);
+	}
+	
+	
+	//validateUser - returns a new session if the username and password are valid. 
+	
+	public Session validateUser(String u, String p) {
+		theSession = theModel.validateLogin(u, p);
+		return theSession;
+	}
+	
+	
+	//validate - checks if a user with the inputed username and password exists. 
+	
+	public boolean validate(String u, String p) {
+		theSession = theModel.validateLogin(u, p);
+		return (theSession != null);
+	}
+	
+	
+	//login - creates a new home invoker with the newly created sessions, sets it as the active invoker.
+	
+	public void login() {
+		theSession.setSocket(theSocket);
+		HomeInvoker invoker = new HomeInvoker(theSession);
+		invoker.setPreviousInvoker(this);
+		theSocket.setInvoker(invoker);
+
+	}
+	
+	
+	//register - creates a new register invoker and sets it as the active invoker.
+	
+	public void register() {
+		if(theSession != null) {
+			theSocket = theSession.getSocket();
+		}
+		RegisterInvoker invoker = new RegisterInvoker(theModel.getConn(), theSocket);
+		invoker.setPreviousInvoker(this);
+		theSocket.setInvoker(invoker);
+	}
+	
+	
+	//handleRequest - Dictates what method should be called for each incoming request, 
+	//returns the corresponding response.
+	
+	public Response handleRequest(Request request) {
+	
+		int index = request.getMethod();
+		
+	    Response response = super.handleRequest(request);
+
+		switch(index) {
+		
+		case 3 : ArrayList<String> inParams = (ArrayList<String>)request.getObject();
+				 response.setSwitch(validate(inParams.get(0), inParams.get(1)));
+				 break;
+		case 4 : login();
+				 response.setSwitch(true);
+				 break;
+		case 5 : register();
+				 response.setSwitch(true);
+				 break;
+		}
+		
+		return response;
+	}
+	
+
+}

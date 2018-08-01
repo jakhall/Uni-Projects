@@ -1,0 +1,82 @@
+package aurora.controller;
+
+import java.util.ArrayList;
+
+import javax.swing.JPanel;
+
+import aurora.model.LoginModel;
+import aurora.model.Session;
+import aurora.network.Request;
+import aurora.network.Response;
+import aurora.view.BaseFrame;
+import aurora.view.BasePanel;
+import aurora.view.HomePanel;
+import aurora.view.RegisterPanel;
+
+/**
+ * Login controller - controls the login view, allows the user to input their login details or 
+ * enter the register view.
+ * 
+ */
+
+public class LoginController extends BaseController {
+	
+	private LoginModel theModel;
+	
+	//creates a new login model. 
+	
+	public LoginController() {
+		theModel = new LoginModel();	
+	}
+
+	
+	//stores the current session and creates a new login model. 
+	
+	public LoginController(Session s) {
+		theSession = s;
+		theModel = new LoginModel(s);
+	}
+	
+	public LoginModel getModel() {
+		return (LoginModel) theModel;
+	}
+	
+	
+	//start - creates the BaseFrame to view the panel. 
+	
+	public void start() {
+		theFrame = new BaseFrame(this);
+	}
+	
+	
+	
+	public Session validateUser(String u, String p) {
+		theSession = theModel.validateLogin(u, p);
+		return theSession;
+	}
+	
+	public boolean validate(String u, String p) {
+		theSession = theModel.validateLogin(u, p);
+		return (theSession != null);
+	}
+	
+	public void login() {
+		HomeController hc = new HomeController(theSession);
+		hc.setFrame(theFrame);
+		hc.setPreviousPanel((BasePanel) theFrame.getContentPane());
+		HomePanel hp = new HomePanel(hc);
+		theFrame.setContentPane(hp);
+		theFrame.pack();
+	}
+	
+	public void register() {
+		RegisterController rc = new RegisterController(theModel.getConn());
+		rc.setFrame(theFrame);
+		rc.setPreviousPanel((BasePanel) theFrame.getContentPane());
+		RegisterPanel rp = new RegisterPanel(rc);
+		theFrame.setContentPane(rp);
+		theFrame.pack();
+	}
+	
+
+}

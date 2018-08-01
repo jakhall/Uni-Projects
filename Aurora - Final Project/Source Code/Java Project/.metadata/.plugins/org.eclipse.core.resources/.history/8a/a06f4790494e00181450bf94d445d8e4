@@ -1,0 +1,170 @@
+
+package aurora.remote;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+
+import aurora.model.Document;
+import aurora.model.HomeModel;
+import aurora.model.Profile;
+import aurora.model.Session;
+import aurora.network.Request;
+import aurora.network.Response;
+import aurora.view.BasePanel;
+import aurora.view.DetailPanel;
+import aurora.view.DocumentPanel;
+import aurora.view.HomePanel;
+import aurora.view.LoginPanel;
+import aurora.view.ManagePanel;
+import aurora.view.ProfilePanel;
+import aurora.view.UserDocumentPanel;
+
+public class HomeInvoker extends BaseInvoker {
+		
+		private HomeModel theModel;
+		
+		public HomeInvoker(Session s) {
+			super(s);
+			theSession = s;
+			theModel = new HomeModel(s);	
+		}
+	
+		public HomeModel getModel() {
+			return (HomeModel) theModel;
+		}
+
+		public String[] getUserDocsTitle() {
+			Document[] docArr = theModel.getUserDocuments();
+			String[] strArr = new String[docArr.length];
+			for(int i = 0; i < docArr.length; i++) {
+				strArr[i] = docArr[i].getTitle();
+			}
+			return strArr;
+		}
+		
+		public byte[] getProfileImage() {
+			
+			String s =  File.separator;
+			
+			File imageFile = new File(System.getenv("APPDATA") + s + "Aurora" + s + "profile_data" + s 
+							+ theSession.getUser().getUsername() + s + "profile" + s + "icon.png");
+		
+			if(!imageFile.exists()) {
+				String url = "/default_data/profile_image/default_" + theSession.getUser().getDefaultColor() + ".png";
+				imageFile = new File(HomePanel.class.getResource(url).getFile());
+			}
+					
+			try {
+				return Files.readAllBytes(imageFile.toPath());
+			} catch (IOException e) {
+				return null;
+			}
+		}
+		
+		
+		public int getNumOfDocuments() {
+			return theModel.getUserDocuments().length;
+		}
+		
+		public void removeDocument(int index) {
+			Document doc = theModel.getUserDocuments()[index];
+			theModel.removeDocument(doc);
+		}
+		public void addDocument() {
+			theModel.addUserDocument();
+		}
+		
+		
+		public void editDetails() {
+			DetailInvoker invoker = new DetailInvoker(theSession);
+			
+		}
+		
+		public void viewDocument(int id) {
+			Document doc = theModel.getDocument(id);
+			theModel.addAuthor(doc);
+			DocumentInvoker invoker = new DocumentInvoker(theSession, doc, !isAuthor(doc));
+			invoker.setPreviousInvoker(this);
+			theSession.getSocket().setInvoker(invoker);
+		}
+		
+		public boolean isAuthor(Document doc) {
+			if(doc.getAuthor().getUserID() == theSession.getUser().getUserID()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		
+		public ArrayList<Document> getSuggestions(){
+			return theModel.getSuggestions(theSession.getUser(), 0, 15);
+			
+		}
+		
+		public void viewObserve() {
+			ObserveInvoker invoker = new ObserveInvoker(theSession);
+			invoker.setPreviousInvoker(this);
+			theSocket.setInvoker(invoker);
+		}
+		
+		public void viewDocuments() {
+			DocListInvoker invoker = new DocListInvoker(theSession);
+			invoker.setPreviousInvoker(this);
+			theSocket.setInvoker(invoker);
+		}
+	
+		public void viewDetails() {
+			DetailInvoker invoker = new DetailInvoker(theSession);
+			invoker.setPreviousInvoker(this);
+			theSocket.setInvoker(invoker);
+		}
+		
+		public ArrayList<Document> getDocuments() {
+			ArrayList<Document> docList = theModel.getDocList(theSession.getUser());
+			for(Document doc : docList) {
+				theModel.addAuthor(doc);
+			}
+			return theModel.getDocList(theSession.getUser();
+		}
+		
+		
+		public Response handleRequest(Request request) {
+			
+			Response response = super.handleRequest(request);
+			int index = request.getMethod();
+			
+			switch(index) {
+			
+			case 3 : response = new Response(getUser());
+					 break;
+			case 4 : response = new Response(getProfileImage());
+					 break;
+			case 5 : viewObserve();
+					 break;
+			case 6 : viewDocument(request.getValue());
+				 	 break;
+			case 7 : viewDocuments();
+			 		 break;
+			case 8 : viewDetails();
+					 break;
+			case 9 : response = new Response(getDocuments());
+			 		 break;
+			case 10 : response = new Response(getSuggestions());
+	 		 		 break;
+			}
+			
+			return response;
+		}
+		
+		
+}
+
+

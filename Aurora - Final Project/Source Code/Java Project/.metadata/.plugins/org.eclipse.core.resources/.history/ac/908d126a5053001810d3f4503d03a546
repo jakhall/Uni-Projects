@@ -1,0 +1,25 @@
+package aurora.model;
+import java.sql.*;
+
+/**
+ * 
+ * DBConnection - Creates a connection to the aurora database, stores it as a connection object.
+ *
+ */
+
+public class DBConnection {
+	
+	Connection conn = null;
+	
+	public static Connection dbConnector() {
+		try {
+			Class.forName("org.sqlite.JDBC");
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:resources\\Aurora_Database.sqlite");
+			System.out.println("Connected to Aurora.. ");
+			return conn;
+		} catch(Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+}

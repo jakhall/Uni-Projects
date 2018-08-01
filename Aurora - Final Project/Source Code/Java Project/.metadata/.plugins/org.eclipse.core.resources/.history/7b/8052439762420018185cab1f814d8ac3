@@ -1,0 +1,8 @@
+
+class ServerLauncher {
+
+    public static void main(String[] args) {
+        TestServer testServer = new TestServer();
+    }
+	
+}

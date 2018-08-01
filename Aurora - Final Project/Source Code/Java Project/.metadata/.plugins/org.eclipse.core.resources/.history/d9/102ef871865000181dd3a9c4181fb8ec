@@ -1,0 +1,136 @@
+package aurora.remote;
+
+import aurora.model.BaseModel;
+import aurora.model.Profile;
+import aurora.model.Session;
+import aurora.network.Request;
+import aurora.network.Response;
+import aurora.network.SocketController;
+import aurora.view.BaseFrame;
+
+
+/**
+ * 
+ * Base Invoker - Defines the base functionality of all invokers.
+ *
+ */
+
+public class BaseInvoker {
+	
+	protected BaseFrame theFrame;
+	protected BaseModel theModel;
+	protected Session theSession;
+	protected BaseInvoker previousInvoker;
+	protected SocketController theSocket;
+	
+	public BaseInvoker() {
+	}
+
+	public BaseInvoker(Session session) {
+		theSession = session;
+		theSocket = session.getSocket();
+	}
+	
+	public BaseInvoker(SocketController socket) {
+		theSocket = socket;
+	}
+	
+	public BaseModel getModel() {
+		return theModel;
+	}
+
+	public void setModel(BaseModel m) {
+		theModel = m;
+	}
+
+	public Session getSession() {
+		return theSession;
+	}
+
+	public void setSession(Session s) {
+		theSession = s;
+	}
+	
+	public Profile getUser() {
+		return theSession.getUser();
+	}
+
+	public BaseInvoker getPreviousPanel() {
+		return previousInvoker;
+	}
+
+	public void setPreviousInvoker(BaseInvoker invoker) {
+		this.previousInvoker = invoker;
+	}
+	
+	
+	//Logout - sets the active invoker equal to a new login invoker. 
+	
+	public void logout() {
+		LoginInvoker invoker = new LoginInvoker(theSession);
+		theSocket.setInvoker(invoker);
+	}
+	
+	//Back - sets the active invoker equal to the previous invoker.
+	
+	public void back() {
+		theSocket.setInvoker(previousInvoker);
+	}
+	
+	public void search(String query) {
+		SearchInvoker invoker = new SearchInvoker(theSession, query);
+		invoker.setPreviousInvoker(this);
+		theSocket.setInvoker(invoker);
+	}
+	
+	
+	public Response handleRequest(Request request) {
+		
+		int index = request.getMethod();
+		Response response = new Response();
+		
+		switch(index) {
+			case 0 : logout();
+					 response.setSwitch(true);
+			 		 break;
+			case 1 : back();
+					 response.setSwitch(true);
+			 		 break;
+			case 2 : String query = (String)request.getObject();
+					 search(query);
+					response.setSwitch(true);
+					break;
+	
+				}
+	
+		return response;
+	}
+	
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

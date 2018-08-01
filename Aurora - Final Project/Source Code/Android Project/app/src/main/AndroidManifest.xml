@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.aurora.main">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name="aurora.main.LoginActivity"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="aurora.main.HomeActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name="aurora.main.ObserveActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity
+            android:name="aurora.main.ManageActivity"
+            android:label="@string/title_activity_manage"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="aurora.main.GuideActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="aurora.main.ProfileActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="aurora.main.DocListActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="aurora.main.DocumentActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="aurora.main.DetailActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="aurora.main.SearchActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="aurora.main.RegisterActivity"
+            android:windowSoftInputMode="stateHidden"/>
+    </application>
+
+</manifest>

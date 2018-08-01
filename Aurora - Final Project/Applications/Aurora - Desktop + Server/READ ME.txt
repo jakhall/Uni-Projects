@@ -1,0 +1,24 @@
+--- Aurora Installation Guide ---
+	
+
+Aurora contains three systems: The Desktop GUI, The Server and the Mobile Application:
+
+
+Step 1 - Move the "Aurora" folder into the %Appdata% folder location, this contains the test data.
+
+Step 2 - Run the "Auora_Desktop" jar in the "Aurora - Desktop + Server" folder to access the Desktop GUI.
+
+Step 3 - Start the "RUN" batch file to create the server do not open the "Aurora_Server" jar.
+
+Step 4 - Install the "Aurora" apk in the "Aurora - Android App" folder onto an android application. 
+
+Step 5 - To use the mobile application a connection must be created. Once the server it running, connect
+	 to the local IP of the machine running it by pressing the "Connect" button. 
+
+Step 6 - Login to the system by either creating a new user, or by entering "JohnSmith5" as the username and
+	"1234" as the password. 
+
+Step 7 - If installed correctly you should now be able to explore the system. 
+
+
+Created by Jak Hall, Brighton, 15326673.

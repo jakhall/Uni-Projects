@@ -1,0 +1,10 @@
+
+public class AuroraClient {
+	AuroraClient(){
+		
+	}
+	
+	public void communicate() {
+		Socket socket = new Socket("localHost", 4016)
+	}
+}

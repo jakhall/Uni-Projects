@@ -1,0 +1,52 @@
+package aurora.network;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.SocketException;
+import aurora.controller.LoginController;
+import aurora.model.BIO;
+import lipermi.exception.LipeRMIException;
+import lipermi.handler.CallHandler;
+
+/**
+ * 
+ * Server Launcher - Creates the server and sets up file structure.
+ *
+ */
+
+class ServerLauncher {
+
+	
+	//Starts a new AuroraServer, waits for a user input to shut it down again.
+	
+    public static void main(String[] args) {
+    	formFiles();
+    	AuroraServer server = new AuroraServer();
+    	server.start();
+    	System.out.println("Enter any key to shutdown.");
+    	String cmd = BIO.getString();
+    	server.shutdown();
+    }
+    
+   
+    //formFiles - creates the file structure in order to store profile data.
+    
+	private static void formFiles() {
+		String dir = System.getenv("APPDATA");
+		dir = dir + File.separator + "Aurora" + File.separator + "profile_data";
+		File mainFolder = new File(dir);
+		createDir(mainFolder);
+	}
+	
+	
+	//createDir - creates a directory in the specified file location if it does not exist.
+	
+	private static void createDir(File f) {
+		if (!f.exists()) {
+			   f.mkdirs();
+			   System.out.println("Directory created..");
+			}
+	}
+	
+	
+}

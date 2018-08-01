@@ -1,0 +1,19 @@
+package aurora.main;
+
+import java.net.Socket;
+
+/**
+ * SocketHandler - stores the socket object.
+ */
+
+public class SocketHandler {
+    private static Socket socket;
+
+    public static synchronized Socket getSocket(){
+        return socket;
+    }
+
+    public static synchronized void setSocket(Socket socket){
+        SocketHandler.socket = socket;
+    }
+}

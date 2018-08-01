@@ -1,0 +1,15 @@
+
+class ServerLauncher {
+
+	public static void main(String[] args) {
+		AuroraServer server = new AuroraServer();
+		try {
+			TestController test = server.communicate();
+			System.out.println("Test equal to: " + test.getColor());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+}

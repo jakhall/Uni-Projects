@@ -1,0 +1,137 @@
+package aurora.view;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+import aurora.controller.BaseController;
+import aurora.controller.DocumentController;
+import aurora.controller.HomeController;
+import aurora.controller.LoginController;
+import aurora.model.Document;
+import aurora.model.LoginModel;
+import aurora.model.Profile;
+import aurora.model.Session;
+import java.awt.Color;
+import java.awt.Dimension;
+
+import javax.swing.border.MatteBorder;
+import java.awt.Insets;
+
+public class UserDocumentPanel extends MainPanel {
+	
+	private DocumentController theController;
+	
+	private JTextArea documentText;
+	private JLabel postedByLbl;
+	private JScrollPane textScroll;
+	private JTextField lblTitle;
+	private JLabel lblPostedBy;
+	private JButton btnEdit;
+	private JButton btnSave;
+	
+	public UserDocumentPanel(DocumentController documentController) {
+		super(documentController);
+		theController = documentController;
+		
+		setupPanel();
+		setupData();
+		setupListeners();
+	}
+	
+	//setupPanel - adds all the visual elements, defines their properties.
+	
+	protected void setupPanel() {
+		super.setupPanel();
+		this.setPreferredSize(new Dimension(500, 600));
+		
+		SpringLayout springLayout = (SpringLayout) contentPanel.getLayout();
+		
+		textScroll = new JScrollPane();
+		springLayout.putConstraint(SpringLayout.NORTH, textScroll, 60, SpringLayout.NORTH, contentPanel);
+		springLayout.putConstraint(SpringLayout.WEST, textScroll, 52, SpringLayout.WEST, contentPanel);
+		springLayout.putConstraint(SpringLayout.SOUTH, textScroll, 364, SpringLayout.NORTH, contentPanel);
+		springLayout.putConstraint(SpringLayout.EAST, textScroll, -48, SpringLayout.EAST, contentPanel);
+		contentPanel.add(textScroll);
+		
+		documentText = new JTextArea();
+		documentText.setEditable(false);
+		documentText.setLineWrap(true);
+		documentText.setWrapStyleWord(true);
+		textScroll.setViewportView(documentText);
+		
+		lblTitle = new JTextField("Title");
+		lblTitle.setEditable(false);
+		springLayout.putConstraint(SpringLayout.EAST, lblTitle, 200, SpringLayout.WEST, contentPanel);
+		lblTitle.setBackground(new Color(255, 255, 255));
+		springLayout.putConstraint(SpringLayout.WEST, lblTitle, 52, SpringLayout.WEST, contentPanel);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblTitle, -10, SpringLayout.NORTH, textScroll);
+		contentPanel.add(lblTitle);
+		
+		lblPostedBy = new JLabel("Post By:");
+		springLayout.putConstraint(SpringLayout.WEST, lblPostedBy, 100, SpringLayout.EAST, lblTitle);
+		springLayout.putConstraint(SpringLayout.SOUTH, lblPostedBy, -16, SpringLayout.NORTH, textScroll);
+		springLayout.putConstraint(SpringLayout.EAST, lblPostedBy, -52, SpringLayout.EAST, contentPanel);
+		lblPostedBy.setHorizontalAlignment(SwingConstants.TRAILING);
+		contentPanel.add(lblPostedBy);
+		
+		btnEdit = new JButton("Edit");
+		springLayout.putConstraint(SpringLayout.NORTH, btnEdit, 6, SpringLayout.SOUTH, textScroll);
+		springLayout.putConstraint(SpringLayout.WEST, btnEdit, -111, SpringLayout.EAST, contentPanel);
+		springLayout.putConstraint(SpringLayout.EAST, btnEdit, -48, SpringLayout.EAST, contentPanel);
+		contentPanel.add(btnEdit);
+		
+		btnSave = new JButton("Save");
+		btnSave.setVisible(false);
+		springLayout.putConstraint(SpringLayout.NORTH, btnSave, 6, SpringLayout.SOUTH, textScroll);
+		springLayout.putConstraint(SpringLayout.WEST, btnSave, -69, SpringLayout.WEST, btnEdit);
+		springLayout.putConstraint(SpringLayout.EAST, btnSave, -6, SpringLayout.WEST, btnEdit);
+		contentPanel.add(btnSave);
+		
+		
+	}
+	
+	//setupData - adds all the necessary data retrieved from the controller.
+	
+	public void setupData() {
+		super.setupData();
+	    Document doc = theController.getDocument();
+	    lblTitle.setText(doc.getTitle());
+	    documentText.setText(doc.getText());
+	    lblPostedBy.setText("Posted By: " + doc.getAuthor().getUsername());
+	}
+	
+	//setupListeners - adds listeners to all of the necessary fields and buttons.
+	
+	protected void setupListeners() {
+		super.setupListeners();
+		
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent click) {
+				if(btnSave.isVisible()) {
+					btnSave.setVisible(false);
+					documentText.setEditable(false);
+					lblTitle.setEditable(false);
+				} else {
+					lblTitle.setEditable(true);
+					btnSave.setVisible(true);
+					documentText.setEditable(true);
+				}
+			}
+		});
+		
+		
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent click) {
+				String text = documentText.getText();
+				String title = lblTitle.getText();
+				theController.saveDocument(title, text);
+				btnSave.setVisible(false);
+				documentText.setEditable(false);
+				lblTitle.setEditable(false);
+			}
+		});
+		
+		
+
+	}
+}

@@ -1,0 +1,21 @@
+package aurora.model;
+
+import aurora.retrieval.VectorSpaceModel;
+
+public class VSMHandler {
+	
+	VectorSpaceModel vsm;
+	
+	VSMHandler(){
+	}
+	
+	static {
+		DBConnection conn = new DBConnection();
+		vsm = new VectorSpaceModel(conn.dbConnector());
+	}
+	
+	public VectorSpaceModel getVSM() {
+		return vsm;
+	}
+	
+}

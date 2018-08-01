@@ -1,0 +1,87 @@
+package aurora.network;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+
+import lipermi.exception.LipeRMIException;
+import lipermi.handler.CallHandler;
+import lipermi.net.IServerListener;
+import lipermi.net.Server;
+import aurora.model.BIO;
+import aurora.model.DBConnection;
+import aurora.model.VSMHandler;
+import aurora.retrieval.VectorSpaceModel;
+
+
+/**
+ * 
+ * Aurora Server - Listens for clients and connects them to the local system.
+ *
+ */
+
+
+public class AuroraServer extends Thread {
+	
+	private final int port = 10777;
+	private boolean isRunning = false;
+	private ServerSocket serverSocket = null;
+
+	
+    public AuroraServer() {
+    	
+    }
+    
+    
+    //Shutdown - stops the server from running, closes the server 
+    //socket and sets isRunning to false.
+    
+    public void shutdown() {
+    	System.out.println("Aurora: Shutting down..");
+    	isRunning = false;
+    	try {
+			serverSocket.close();
+	    	System.out.println("Aurora: Shutdown complete.");
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("Aurora: Shutdown failed.");
+		}
+    }
+  
+    
+    //Run - assigns a Socket and SocketController to each
+    //connecting client whilst isRunning is true.
+    
+    public void run() {
+    		isRunning = true;
+            Socket socket = null;
+            System.out.println("Aurora: Starting..");
+            try {
+                serverSocket = new ServerSocket(port);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            VSMHandler handler = VSMHandler.getHandler();
+            VectorSpaceModel vsm = new VectorSpaceModel(DBConnection.dbConnector());
+            System.out.println("Aurora: Listening..");
+            
+            while (isRunning) {
+                    try {
+						socket = serverSocket.accept();
+					    new SocketController(socket, vsm).start();
+					} catch (IOException e) {
+						if(!e.getClass().equals(SocketException.class)) {
+							e.printStackTrace();
+						}
+						
+					}   
+            }
+            
+            return;
+       }
+}
+
+
+
